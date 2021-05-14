@@ -1,0 +1,14 @@
+body {
+  background-color: rgb(22, 22, 22);
+}
+
+.signature{
+    background-color: #0a0;
+    position: fixed;
+    bottom: 0px;
+    right: 200px;
+    width: 55px;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    box-shadow: 5px 5px 5px 0px #000000;
+  }
