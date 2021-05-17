@@ -7,8 +7,10 @@ class Slashproj extends Phaser.Physics.Arcade.Sprite{
     scene.physics.add.existing(this);
 
 
+    scene.crawlerContainer.iterate(crawlerMonster => {
+      scene.physics.add.overlap(crawlerMonster, this, function(){crawlerMonster.setDeath()}, null, scene);
+    })
 
-    scene.physics.add.overlap(scene.crawlerContainer.first, this, function(){scene.crawlerContainer.first.setDeath()}, null, scene);
 
 
     this.scale = 3;

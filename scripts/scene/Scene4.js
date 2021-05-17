@@ -14,13 +14,13 @@ class Scene4 extends Phaser.Scene {
 
     // Background
     this.load.image('blank', 'assets/blank.png');
-    this.load.image('clouds', 'assets/clouds.png');
-    this.load.image('bg_1', 'assets/bgsky.png');
-    this.load.image('bg_2', 'assets/bgmountains.png');
+    //this.load.image('clouds', 'assets/clouds.png');
+    //this.load.image('bg_1', 'assets/bgsky.png');
+    //this.load.image('bg_2', 'assets/bgmountains.png');
 
     // Tilemap
-    this.load.image('mytileset', 'assets/tileset.png');
-    this.load.tilemapTiledJSON('map', 'assets/tiledScene.json');
+    //this.load.image('mytileset', 'assets/tileset.png');
+    //this.load.tilemapTiledJSON('map', 'assets/tiledScene.json');
 
     // objects
     this.load.image('bullet', 'assets/bullet.png');
@@ -40,6 +40,12 @@ class Scene4 extends Phaser.Scene {
     this.load.spritesheet('expl', 'assets/explosion_monster.png', { frameWidth: 32, frameHeight: 32 } );
 
     this.load.spritesheet('opendialog', 'assets/opendial.png',{frameWidth: 1000, frameHeight: 160 });
+
+    //NEW MAP LOADS
+    this.load.image('map1_bg', 'assets/map1/map1_backg.jpg');
+    this.load.image('map1_cov', 'assets/map1/map1_covering.png');
+    this.load.image('map1_ts', 'assets/map1/tq1.png');
+    this.load.tilemapTiledJSON('map1', 'assets/map1/map1.json');
   }
 
   create(){
@@ -50,34 +56,37 @@ class Scene4 extends Phaser.Scene {
 
 
     // Backgrounds
-    this.bg_1 = this.add.tileSprite(0,0, game.config.width, game.config.height, "bg_1");
-    this.bg_1.setOrigin(0,0);
-    this.bg_1.setScrollFactor(0);
+    this.add.sprite(2455, 1660, 'map1_bg');
+    this.add.sprite(2455, 1660, 'map1_cov');
 
-    this.bg_clouds = this.add.tileSprite(0,0, game.config.width, game.config.height, "clouds");
-    this.bg_clouds.setOrigin(0,0);
-    this.bg_clouds.setScrollFactor(0);
+    //this.bg_1 = this.add.tileSprite(0,0, game.config.width, game.config.height, "bg_1");
+    //this.bg_1.setOrigin(0,0);
+    //this.bg_1.setScrollFactor(0);
 
-    this.bg_2 = this.add.tileSprite(0,250, game.config.width, game.config.height, "bg_2");
-    this.bg_2.setOrigin(0,0);
-    this.bg_2.setScrollFactor(0);
+    //this.bg_clouds = this.add.tileSprite(0,0, game.config.width, game.config.height, "clouds");
+    //this.bg_clouds.setOrigin(0,0);
+    //this.bg_clouds.setScrollFactor(0);
+
+    //this.bg_2 = this.add.tileSprite(0,250, game.config.width, game.config.height, "bg_2");
+    //this.bg_2.setOrigin(0,0);
+    //this.bg_2.setScrollFactor(0);
 
     // Tilemap
-    this.map = this.make.tilemap({ key: 'map' });
-    this.mytileset = this.map.addTilesetImage('tileset','mytileset', 64, 64);
-    this.platforms = this.map.createLayer('Platforms', this.mytileset, 64, 64);
+    this.map = this.make.tilemap({ key: 'map1' });
+    this.mytileset = this.map.addTilesetImage('ts','map1_ts', 64, 64);
+    this.platforms = this.map.createLayer('ground', this.mytileset, 64, 64);
     this.platforms.setCollisionByProperty({ isCollider: true });
-    this.mwalls = this.map.createLayer('Mwalls', this.mytileset, 64, 64);
+    this.mwalls = this.map.createLayer('mwalls', this.mytileset, 64, 64);
     this.mwalls.setCollisionByProperty({ isCollider: true });
 
     this.physics.world.setBounds(64, 64, this.map.widthInPixels,  this.map.heightInPixels+200);
 
     //Infos
-    this.iNext = new Info_Next(this,3070,210,'gonext');
-    this.add.sprite(400, 2950, 'help');
+    //this.iNext = new Info_Next(this,3070,210,'gonext');
+    this.add.sprite(750, 2800, 'help');
 
     //NPC Test
-    this.npctest=new Npc(this,850,3040,'npctest');
+    this.npctest=new Npc(this,900,2910,'npctest');
 
     // Player
     this.player=new Player(this,150,2500,'nash');
@@ -88,7 +97,7 @@ class Scene4 extends Phaser.Scene {
 
     // Crawlers spawn
     this.crawlerContainer=this.add.container();
-    this.crawlersObjects = this.map.getObjectLayer('Crawlers')['objects'];
+    this.crawlersObjects = this.map.getObjectLayer('crawlers')['objects'];
     this.crawlersObjects.forEach(monsterObject => {
       let monster=new Crawler(this,monsterObject.x,monsterObject.y);
       this.crawlerContainer.add(monster);
@@ -98,13 +107,15 @@ class Scene4 extends Phaser.Scene {
 
     // Gunners spawn
     this.gunnerContainer=this.add.container();
-    this.gunnersObjects = this.map.getObjectLayer('Gunners')['objects'];
+    this.gunnersObjects = this.map.getObjectLayer('gunners')['objects'];
     this.gunnersObjects.forEach(monsterObject => {
       let monster=new Gunner(this,monsterObject.x,monsterObject.y);
       this.gunnerContainer.add(monster);
       this.physics.add.collider(monster, this.platforms);
       this.physics.add.collider(monster, this.mwalls);
     });
+
+
 
 
 
@@ -141,16 +152,15 @@ class Scene4 extends Phaser.Scene {
     this.crawlerContainer.each(function (child) {child.upd();});
     this.gunnerContainer.each(function (child) {child.upd();});
 
-    this.iNext.upd(delta);
+    //this.iNext.upd(delta);
 
     //mmmmm
     this.npctest.playerQuery();
 
     // Parralax
-    this.bg_1.tilePositionX = this.cameras.main.scrollX * .2;
-    this.bg_2.tilePositionX = this.cameras.main.scrollX * .5;
-    this.bg_2.tilePositionY = this.cameras.main.scrollY * .1;
-    this.bg_clouds.tilePositionX += .1;
+    //this.bg_2.tilePositionX = this.cameras.main.scrollX * .5;
+    //this.bg_2.tilePositionY = this.cameras.main.scrollY * .1;
+    //this.bg_clouds.tilePositionX += .1;
 
     if(this.player.isBelow(this.map.heightInPixels+50)){this.restart();}
 
@@ -161,7 +171,7 @@ class Scene4 extends Phaser.Scene {
 
   myDialbox(b, n){ // b : is Active? || n : Who?
     if(b){
-      this.dialbox = new Dialogbox(this, n.x, n.y - 400, 'opendialog');
+      this.dialbox = new Dialogbox(this, n.x, n.y - 300, 'opendialog');
       this.dialbox.call();
     }
     else{

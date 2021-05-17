@@ -10,7 +10,7 @@ class Player extends Phaser.Physics.Arcade.Sprite{
 
     this.setBodySize(this.body.width-110,this.body.height-17);
     this.setOffset(55, 15);
-    this.scale = 2;
+    this.scale = 1.3;
     this.isStomping = false;
     this.isAttacking = false;
     this.dirX = 1;
