@@ -5,8 +5,8 @@ class Scene1 extends Phaser.Scene {
 
   preload ()
   {
-    this.load.image('titlescreen', 'assets/titlescr.png');
-    this.load.image('btn', 'assets/button.png');
+    this.load.image('titlescreen', 'assets/DS_Title.png');
+    this.load.image('btn', 'assets/buttontitle.png');
     this.load.spritesheet('cp', 'assets/cp.png', { frameWidth: 206, frameHeight: 184 } );
     this.load.audio('a', [ 'assets/audio/a.ogg', 'assets/audio/a.mp3' ]);
   }
@@ -23,9 +23,9 @@ class Scene1 extends Phaser.Scene {
     //this.add.text(160,200,">> CAMPFIRE INVASION <<",{font: "70px visitor", fill:"#FFF"});
     this.add.sprite(game.config.width/2, game.config.height/2, 'titlescreen');
 
-    let plight = this.add.pointlight(game.config.width/2+60, game.config.height/2-160, 0, 200, 0.5);
+    let plight = this.add.pointlight(game.config.width/2-200, game.config.height/2-0, 0, 200, 0.5);
     plight.attenuation = 0.05;
-    plight.color.setTo(255, 100, 0);
+    plight.color.setTo(200, 200, 200);
 
 
     let mybtn = this.add.sprite(game.config.width/2, game.config.height -100, 'btn');
@@ -53,7 +53,7 @@ class Scene1 extends Phaser.Scene {
       delay:Math.random()*1000,
       alpha:{
         startDelay:Math.random()*5000,
-        from:0,
+        from:0.5,
         to:1,
       }
     })

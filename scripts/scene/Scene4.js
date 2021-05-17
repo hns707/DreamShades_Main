@@ -23,10 +23,10 @@ class Scene4 extends Phaser.Scene {
     //this.load.tilemapTiledJSON('map', 'assets/tiledScene.json');
 
     // objects
-    this.load.image('bullet', 'assets/bullet.png');
+    this.load.image('bullet', 'assets/bulletb.png');
     this.load.image('gonext', 'assets/next.png');
     this.load.image('help', 'assets/help.png');
-    this.load.image('swh', 'assets/swordHit.png');
+    //this.load.image('swh', 'assets/swordHit.png');
 
 
     // Dialogbox
@@ -35,17 +35,17 @@ class Scene4 extends Phaser.Scene {
 
     // Spritesheets
     this.load.spritesheet('shell', 'assets/shell.png', { frameWidth: 128, frameHeight: 64 } );
-    this.load.spritesheet('crawler', 'assets/crawler.png', { frameWidth: 32, frameHeight: 16 } );
-    this.load.spritesheet('gunner', 'assets/gunner.png', { frameWidth: 32, frameHeight: 32 } );
-    this.load.spritesheet('expl', 'assets/explosion_monster.png', { frameWidth: 32, frameHeight: 32 } );
+    this.load.spritesheet('crawler', 'assets/crawlerb.png', { frameWidth: 32, frameHeight: 16 } );
+    this.load.spritesheet('gunner', 'assets/gunnerb.png', { frameWidth: 32, frameHeight: 32 } );
+    this.load.spritesheet('expl', 'assets/explosion_monsterb.png', { frameWidth: 32, frameHeight: 32 } );
 
     this.load.spritesheet('opendialog', 'assets/opendial.png',{frameWidth: 1000, frameHeight: 160 });
 
     //NEW MAP LOADS
     this.load.image('map1_bg', 'assets/map1/map1_backg.jpg');
-    this.load.image('map1_cov', 'assets/map1/map1_covering.png');
+    this.load.image('map1_cov', 'assets/map1/map1_covering_b.png');
     this.load.image('map1_ts', 'assets/map1/tq1.png');
-    this.load.tilemapTiledJSON('map1', 'assets/map1/map1.json');
+    this.load.tilemapTiledJSON('map1', 'assets/map1/map1_b.json');
   }
 
   create(){
@@ -78,6 +78,7 @@ class Scene4 extends Phaser.Scene {
     this.platforms.setCollisionByProperty({ isCollider: true });
     this.mwalls = this.map.createLayer('mwalls', this.mytileset, 64, 64);
     this.mwalls.setCollisionByProperty({ isCollider: true });
+    this.mwalls.setAlpha(0);
 
     this.physics.world.setBounds(64, 64, this.map.widthInPixels,  this.map.heightInPixels+200);
 
@@ -89,7 +90,7 @@ class Scene4 extends Phaser.Scene {
     this.npctest=new Npc(this,900,2910,'npctest');
 
     // Player
-    this.player=new Player(this,150,2500,'nash');
+    this.player=new Player(this,150,2850,'nash');
     this.physics.add.collider(this.player, this.platforms);
     this.player.setCollideWorldBounds(true)
 

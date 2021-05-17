@@ -7,8 +7,8 @@ var config = {
     physics: {
         default: 'arcade',
         arcade: {
-            gravity: { y: 800 },
-            debug: true
+            gravity: { y: 1200 },
+            debug: false
         }
     },
 	scene: [Scene1, Scene2, Scene3, Scene4]

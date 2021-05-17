@@ -10,7 +10,7 @@ class Player extends Phaser.Physics.Arcade.Sprite{
 
     this.setBodySize(this.body.width-110,this.body.height-17);
     this.setOffset(55, 15);
-    this.scale = 1.3;
+    this.scale = 2;
     this.isStomping = false;
     this.isAttacking = false;
     this.dirX = 1;
@@ -18,12 +18,15 @@ class Player extends Phaser.Physics.Arcade.Sprite{
     // Vertical(up) accel
     this.upAccel = false;
     this.upSpeed = 0;
+    // Horizontal accel
+    this.xAccel = false;
+    this.xSpeed = 0;
 
 
     //this.debugText = scene.add.text(this.x, this.y, 'XY')
 
 
-    this.anims.create({
+    this.wlk = this.anims.create({
       key: 'walk',
       frames: this.anims.generateFrameNumbers('shell', { start: 1, end: 6 }),
       frameRate: 10,
@@ -72,23 +75,51 @@ class Player extends Phaser.Physics.Arcade.Sprite{
     //this.debugText.y = this.y - 70;
     // ^^^^^^
 
+    //this.setVelocityX(this.xSpeed);
+    if(this.body.blocked.down){
+      this.setVelocityX((this.xSpeed*.1)*this.dirX);
+    }else{
+      this.setVelocityX((this.xSpeed*2)*this.dirX);
+    }
+
+
 
     if (this.cursors.left.isDown && !this.isStomping)
     {
-      this.setVelocityX(-250);
+
+      this.setVelocityX(-200 - this.xSpeed);
       this.dirX = -1;
+      this.xAccel = true;
       if(!this.body.blocked.down && !this.body.blocked.up){this.anims.play('fall');}else{this.anims.play('walk', true);}
       if(!this.flipX){this.flipX = true;}
-      if(this.runKey.isDown){this.setVelocityX(-300);}
+      if(this.body.blocked.down){
+        if(this.xSpeed < 150 && this.xAccel){
+          this.xSpeed += 2; //upspeed add is speed increase over frames
+          this.wlk.frameRate = 10 + this.xSpeed * 0.001;
+        }
+
+      }
+
+      //if(this.runKey.isDown){this.setVelocityX(-300);}
     }
 
     else if (this.cursors.right.isDown && !this.isStomping)
     {
-      this.setVelocityX(250);
+
+      this.setVelocityX(200 + this.xSpeed);
       this.dirX = 1;
+      this.xAccel = true;
       if(!this.body.blocked.down && !this.body.blocked.up){this.anims.play('fall');}else{this.anims.play('walk', true);}
       if(this.flipX){this.flipX = false;}
-      if(this.runKey.isDown){this.setVelocityX(300);}
+      if(this.body.blocked.down){
+        if(this.xSpeed < 150 && this.xAccel){
+          this.xSpeed += 2; //upspeed add is speed increase over frames
+          this.wlk.frameRate = 10 + this.xSpeed * 0.001;
+        }
+
+      }
+
+      //if(this.runKey.isDown){this.setVelocityX(300);}
     }
     else if(this.isAttacking){
       this.anims.play('attack',true);
@@ -96,8 +127,12 @@ class Player extends Phaser.Physics.Arcade.Sprite{
     }
     else
     {
-      this.setVelocityX(0);
-      if(!this.body.blocked.down && !this.body.blocked.up ){this.anims.play('fall');}else{this.anims.play('idle', true);}
+      this.xAccel = false;
+      if(this.xSpeed > 0){
+        this.xSpeed -= 4; //upspeed add is speed increase over frames
+      }else if(this.xSpeed < 0){this.xSpeed = 0;}
+      //this.setVelocityX(0);
+      if(!this.body.blocked.down && !this.body.blocked.up ){this.anims.play('fall');}else{this.anims.play('idle', true);this.wlk.frameRate = 10;  }
     }
 
     if (this.cursors.down.isDown && !this.cursors.up.isDown)
@@ -116,10 +151,11 @@ class Player extends Phaser.Physics.Arcade.Sprite{
     }
 
     // ATTACK
-    if (this.spKey.isDown && !this.isAttacking){
+    if (this.spKey.isDown && !this.isAttacking && !this.cursors.right.isDown && !this.cursors.left.isDown){
       {
         this.isAttacking = true;
-        var slash = new Slashproj(scene,this.x+(50*this.dirX), this.y+20, 'swh');
+        var slash = new Slashproj(scene,this.x+(50*this.dirX), this.y+20);
+        setTimeout(function(){slash.slashout()},500);
       }
     }
 
