@@ -26,6 +26,8 @@ class Scene4 extends Phaser.Scene {
     this.load.image('bullet', 'assets/bulletb.png');
     this.load.image('gonext', 'assets/next.png');
     this.load.image('help', 'assets/help.png');
+
+    this.load.image('heart', 'assets/heart.png');
     //this.load.image('swh', 'assets/swordHit.png');
 
 
@@ -34,7 +36,7 @@ class Scene4 extends Phaser.Scene {
     this.load.image('nashdb', 'assets/nashdialog.png');
 
     // Spritesheets
-    this.load.spritesheet('shell', 'assets/shell.png', { frameWidth: 128, frameHeight: 64 } );
+    this.load.spritesheet('shell', 'assets/shell2.png', { frameWidth: 128, frameHeight: 64 } );
     this.load.spritesheet('crawler', 'assets/crawlerb.png', { frameWidth: 32, frameHeight: 16 } );
     this.load.spritesheet('gunner', 'assets/gunnerb.png', { frameWidth: 32, frameHeight: 32 } );
     this.load.spritesheet('expl', 'assets/explosion_monsterb.png', { frameWidth: 32, frameHeight: 32 } );
@@ -126,6 +128,36 @@ class Scene4 extends Phaser.Scene {
     this.cameras.main.startFollow(this.player);
     this.cameras.main.roundPixels = true;
 
+    //HUD HUD HUD HUD HUD TEMP TEMP TEMP TEMP
+    // ==============================================================================
+    let lifeAmount = this.player.maxHP;
+    this.heart = []; this.heartlight = [];
+
+    for (let i = 0 ; i < lifeAmount ; i++){
+            this.heart[i] = this.add.sprite(16+i*50, 16, 'heart').setOrigin(0,0).setScrollFactor(0);
+            this.heart[i].scale = 2;
+            this.heartlight[i] = this.add.pointlight(this.heart[i].x+16, this.heart[i].y+16, 0, 50, 0.5);
+        };
+    this.heartlight.forEach(l => {
+      l.attenuation = 0.05;
+      l.color.setTo(255, 80, 80);
+      l.setScrollFactor(0);
+      this.tweens.add({
+        targets:l,
+        duration:2000,
+        yoyo: true,
+        repeat:-1,
+        delay:Math.random()*1000,
+        alpha:{
+          startDelay:Math.random()*5000,
+          from:0.5,
+          to:1,
+        }
+      })
+    });
+    // ==============================================================================
+    //HUD HUD HUD HUD HUD TEMP TEMP TEMP TEMP
+
     // DEBUG == DEBUG ==  DEBUG ==  DEBUG ==  DEBUG ==  DEBUG ==  DEBUG //
     // DEBUG == DEBUG ==  DEBUG ==  DEBUG ==  DEBUG ==  DEBUG ==  DEBUG //
     // let debugPlatforms = this.add.graphics().setAlpha(0.75);
@@ -172,15 +204,11 @@ class Scene4 extends Phaser.Scene {
 
   myDialbox(b, n){ // b : is Active? || n : Who?
     if(b){
-      this.dialbox = new Dialogbox(this, n.x, n.y - 300, 'opendialog');
+      this.dialbox = new Dialogbox(this, 100, 450, 'opendialog');
+      this.dialbox.setOrigin(0,0).setScrollFactor(0);
       this.dialbox.call();
     }
-    else{
-
-      this.dialbox.call();
-    }
-
+    else{this.dialbox.call();}
   }
   restart(){this.bgm.stop();this.scene.start("tiledGame");}
-
 }

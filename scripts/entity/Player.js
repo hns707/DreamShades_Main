@@ -7,13 +7,24 @@ class Player extends Phaser.Physics.Arcade.Sprite{
     //this.setCollideWorldBounds(true)
     this.setBounce(0);
     this.setFriction(1,1);
-
     this.setBodySize(this.body.width-110,this.body.height-17);
     this.setOffset(55, 15);
     this.scale = 2;
+    this.world = scene;
+
+    // Player Infos
+    this.maxHP = 5;
+    this.currentHP = this.maxHP;
+
+    // Player Status
     this.isStomping = false;
     this.isAttacking = false;
+    this.isGettingKnockback = false;
     this.dirX = 1;
+    this.knockbackDirX = 1;
+
+
+
 
     // Vertical(up) accel
     this.upAccel = false;
@@ -79,7 +90,11 @@ class Player extends Phaser.Physics.Arcade.Sprite{
     if(this.body.blocked.down){
       this.setVelocityX((this.xSpeed*.1)*this.dirX);
     }else{
-      this.setVelocityX((this.xSpeed*2)*this.dirX);
+      if(this.isGettingKnockback){
+        this.setVelocityX((this.xSpeed*2)*this.knockbackDirX);
+      }else{
+        this.setVelocityX((this.xSpeed*2)*this.dirX);
+      }
     }
 
 
@@ -130,7 +145,7 @@ class Player extends Phaser.Physics.Arcade.Sprite{
       this.xAccel = false;
       if(this.xSpeed > 0){
         this.xSpeed -= 4; //upspeed add is speed increase over frames
-      }else if(this.xSpeed < 0){this.xSpeed = 0;}
+      }else if(this.xSpeed < 0){this.xSpeed = 0;this.isGettingKnockback = false;}
       //this.setVelocityX(0);
       if(!this.body.blocked.down && !this.body.blocked.up ){this.anims.play('fall');}else{this.anims.play('idle', true);this.wlk.frameRate = 10;  }
     }
@@ -192,5 +207,22 @@ class Player extends Phaser.Physics.Arcade.Sprite{
   isOver(y){if(this.y < y){return true;}else{return false;}}
   isBefore(x){if(this.x < x){return true;}else{return false;}}
   isPast(x){if(this.x > x){return true;}else{return false;}}
+
+  getHit(ex){
+    this.knockbackDirX = 1;
+    if(this.isBefore(ex)){this.knockbackDirX = -1;}
+    this.isGettingKnockback = true;
+    this.currentHP -=1;
+    this.world.heart[this.currentHP].destroy();
+    this.world.heartlight[this.currentHP].destroy();
+    console.log('Hit !');
+    console.log(this.currentHP);
+    this.setVelocityX(5000*this.knockbackDirX);
+    this.xSpeed = 200;
+    this.setVelocityY(-400);
+    if(this.currentHP==0){
+      this.world.restart();
+    }
+  }
 
 }

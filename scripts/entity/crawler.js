@@ -34,7 +34,7 @@ class Crawler extends Phaser.Physics.Arcade.Sprite{
 
     this.killSound = scene.sound.add('splash');
 
-    
+
 
   }
 
@@ -70,7 +70,7 @@ class Crawler extends Phaser.Physics.Arcade.Sprite{
     if ((this.body.touching.right && (this.world.player.body.touching.right || this.world.player.body.touching.left))
     || (this.body.touching.left && (this.world.player.body.touching.right || this.world.player.body.touching.left))
     && this.isAlive){
-      this.world.restart();
+      this.world.player.getHit(this.x);
     }
   }
 

@@ -18,8 +18,8 @@ class Dialogbox extends Phaser.Physics.Arcade.Sprite{
 
     this.on('animationcomplete',function () {
       if(this.anims.currentAnim.key === 'open'){
-        this.ndb = scene.add.sprite(x, y, 'nashdb');
-        this.mytxt = scene.add.text(x-325,y-60,"Hello, this i am currently testing my dialogbox.\nPlease don't mind and go ahead.",{font: "30px visitor", fill:"#FFF"}); // 51 chars per line
+        this.ndb = scene.add.sprite(x, y, 'nashdb').setOrigin(0,0).setScrollFactor(0);
+        this.mytxt = scene.add.text(x+175,y+20,"Hey! It's now working like a true HUD! HYPE !\nBut lease don't mind and go ahead, be careful,\nthis level is still in construction.",{font: "30px visitor", fill:"#FFF"}).setOrigin(0,0).setScrollFactor(0);; // 50 chars per line
       }
     });
 
