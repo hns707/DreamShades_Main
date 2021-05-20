@@ -25,7 +25,7 @@ class Scene4 extends Phaser.Scene {
     // objects
     this.load.image('bullet', 'assets/bulletb.png');
     this.load.image('gonext', 'assets/next.png');
-    this.load.image('help', 'assets/help.png');
+    this.load.image('help', 'assets/helpc.png');
 
     this.load.image('heart', 'assets/heart.png');
     //this.load.image('swh', 'assets/swordHit.png');
@@ -36,18 +36,18 @@ class Scene4 extends Phaser.Scene {
     this.load.image('nashdb', 'assets/nashdialog.png');
 
     // Spritesheets
-    this.load.spritesheet('shell', 'assets/shell2.png', { frameWidth: 128, frameHeight: 64 } );
+    this.load.spritesheet('shell', 'assets/shell3.png', { frameWidth: 128, frameHeight: 64 } );
     this.load.spritesheet('crawler', 'assets/crawlerb.png', { frameWidth: 32, frameHeight: 16 } );
     this.load.spritesheet('gunner', 'assets/gunnerb.png', { frameWidth: 32, frameHeight: 32 } );
     this.load.spritesheet('expl', 'assets/explosion_monsterb.png', { frameWidth: 32, frameHeight: 32 } );
 
-    this.load.spritesheet('opendialog', 'assets/opendial.png',{frameWidth: 1000, frameHeight: 160 });
+    this.load.spritesheet('opendialog', 'assets/opendial2.png',{frameWidth: 1000, frameHeight: 160 });
 
     //NEW MAP LOADS
-    this.load.image('map1_bg', 'assets/map1/map1_backg.jpg');
-    this.load.image('map1_cov', 'assets/map1/map1_covering_b.png');
-    this.load.image('map1_ts', 'assets/map1/tq1.png');
-    this.load.tilemapTiledJSON('map1', 'assets/map1/map1_b.json');
+    this.load.image('map1_bg', 'assets/map1/map1_bg.jpg');
+    //this.load.image('map1_cov', 'assets/map1/map1_covering_b.png');
+    this.load.image('map1_ts', 'assets/map1/tiles.png');
+    this.load.tilemapTiledJSON('map1', 'assets/map1/map1_c.json');
   }
 
   create(){
@@ -59,7 +59,7 @@ class Scene4 extends Phaser.Scene {
 
     // Backgrounds
     this.add.sprite(2455, 1660, 'map1_bg');
-    this.add.sprite(2455, 1660, 'map1_cov');
+    //this.add.sprite(2455, 1660, 'map1_cov');
 
     //this.bg_1 = this.add.tileSprite(0,0, game.config.width, game.config.height, "bg_1");
     //this.bg_1.setOrigin(0,0);
@@ -75,7 +75,7 @@ class Scene4 extends Phaser.Scene {
 
     // Tilemap
     this.map = this.make.tilemap({ key: 'map1' });
-    this.mytileset = this.map.addTilesetImage('ts','map1_ts', 64, 64);
+    this.mytileset = this.map.addTilesetImage('tiles','map1_ts', 64, 64);
     this.platforms = this.map.createLayer('ground', this.mytileset, 64, 64);
     this.platforms.setCollisionByProperty({ isCollider: true });
     this.mwalls = this.map.createLayer('mwalls', this.mytileset, 64, 64);
@@ -92,7 +92,7 @@ class Scene4 extends Phaser.Scene {
     this.npctest=new Npc(this,900,2910,'npctest');
 
     // Player
-    this.player=new Player(this,150,2850,'nash');
+    this.player=new Player(this,150,2850,'shell');
     this.physics.add.collider(this.player, this.platforms);
     this.player.setCollideWorldBounds(true)
 

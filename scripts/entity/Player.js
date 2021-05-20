@@ -17,7 +17,6 @@ class Player extends Phaser.Physics.Arcade.Sprite{
     this.currentHP = this.maxHP;
 
     // Player Status
-    this.isStomping = false;
     this.isAttacking = false;
     this.isGettingKnockback = false;
     this.dirX = 1;
@@ -89,6 +88,7 @@ class Player extends Phaser.Physics.Arcade.Sprite{
     //this.setVelocityX(this.xSpeed);
     if(this.body.blocked.down){
       this.setVelocityX((this.xSpeed*.1)*this.dirX);
+      this.isGettingKnockback = false;
     }else{
       if(this.isGettingKnockback){
         this.setVelocityX((this.xSpeed*2)*this.knockbackDirX);
@@ -99,12 +99,13 @@ class Player extends Phaser.Physics.Arcade.Sprite{
 
 
 
-    if (this.cursors.left.isDown && !this.isStomping)
+    if (this.cursors.left.isDown)
     {
-
+      this.isAttacking = false;
       this.setVelocityX(-200 - this.xSpeed);
       this.dirX = -1;
       this.xAccel = true;
+      if (this.angle > -12.5){this.angle -= 0.5;}
       if(!this.body.blocked.down && !this.body.blocked.up){this.anims.play('fall');}else{this.anims.play('walk', true);}
       if(!this.flipX){this.flipX = true;}
       if(this.body.blocked.down){
@@ -118,12 +119,13 @@ class Player extends Phaser.Physics.Arcade.Sprite{
       //if(this.runKey.isDown){this.setVelocityX(-300);}
     }
 
-    else if (this.cursors.right.isDown && !this.isStomping)
+    else if (this.cursors.right.isDown)
     {
-
+      this.isAttacking = false;
       this.setVelocityX(200 + this.xSpeed);
       this.dirX = 1;
       this.xAccel = true;
+      if (this.angle < 12.5){this.angle += 0.5;}
       if(!this.body.blocked.down && !this.body.blocked.up){this.anims.play('fall');}else{this.anims.play('walk', true);}
       if(this.flipX){this.flipX = false;}
       if(this.body.blocked.down){
@@ -138,10 +140,16 @@ class Player extends Phaser.Physics.Arcade.Sprite{
     }
     else if(this.isAttacking){
       this.anims.play('attack',true);
+      if(this.anims.currentFrame.index == 5){
+        console.log("slash");
+        var slash = new Slashproj(scene,this.x+(50*this.dirX), this.y+20);
+        setTimeout(function(){slash.slashout()},500);
+      }
       this.setVelocityX(0);
     }
     else
     {
+      this.angle = 0;
       this.xAccel = false;
       if(this.xSpeed > 0){
         this.xSpeed -= 4; //upspeed add is speed increase over frames
@@ -150,27 +158,11 @@ class Player extends Phaser.Physics.Arcade.Sprite{
       if(!this.body.blocked.down && !this.body.blocked.up ){this.anims.play('fall');}else{this.anims.play('idle', true);this.wlk.frameRate = 10;  }
     }
 
-    if (this.cursors.down.isDown && !this.cursors.up.isDown)
-    {
-      if(!this.body.blocked.down && !this.body.blocked.up){
-        this.anims.play('stomp');
-        this.isStomping = true;
-        this.setVelocityY(800);
-      }else{
-        if(this.isStomping){
-        this.stompSound.play({volume:.5});
-        this.isStomping = false;
-        }
-      }
-
-    }
-
     // ATTACK
     if (this.spKey.isDown && !this.isAttacking && !this.cursors.right.isDown && !this.cursors.left.isDown){
       {
         this.isAttacking = true;
-        var slash = new Slashproj(scene,this.x+(50*this.dirX), this.y+20);
-        setTimeout(function(){slash.slashout()},500);
+
       }
     }
 
@@ -186,6 +178,7 @@ class Player extends Phaser.Physics.Arcade.Sprite{
       if(this.body.velocity.y < -1 && this.upSpeed < 5 && this.upAccel){ //upspeed cond is maxspeed
         this.upSpeed += .3; //upspeed add is speed increase over frames
         this.setVelocityY(-300 -((Math.sin(dt)*(-this.upSpeed))+this.upSpeed));
+        this.angle = 0;
         this.anims.play('jump');
       }
     }else{
@@ -212,11 +205,11 @@ class Player extends Phaser.Physics.Arcade.Sprite{
     this.knockbackDirX = 1;
     if(this.isBefore(ex)){this.knockbackDirX = -1;}
     this.isGettingKnockback = true;
-    this.currentHP -=1;
-    this.world.heart[this.currentHP].destroy();
-    this.world.heartlight[this.currentHP].destroy();
-    console.log('Hit !');
-    console.log(this.currentHP);
+    if(this.currentHP!=0){ // avoid destroy null
+      this.currentHP -=1;
+      this.world.heart[this.currentHP].destroy();
+      this.world.heartlight[this.currentHP].destroy();
+    }
     this.setVelocityX(5000*this.knockbackDirX);
     this.xSpeed = 200;
     this.setVelocityY(-400);

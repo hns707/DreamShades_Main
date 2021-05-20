@@ -5,7 +5,7 @@ class Crawler extends Phaser.Physics.Arcade.Sprite{
 
     scene.add.existing(this);
     scene.physics.add.existing(this);
-    scene.physics.add.collider(scene.player, this);
+    scene.physics.add.overlap(scene.player, this);
 
 
     this.setBounceX(1);
@@ -59,14 +59,8 @@ class Crawler extends Phaser.Physics.Arcade.Sprite{
     if (this.body.velocity.x > 0){this.flipX = true;}
     else{this.flipX = false;}
 
-    // Player kill Ennemy
-    if (this.body.touching.up && this.isAlive){
-      this.world.player.setVelocityY(-400);
-      this.killEffect();
-      this.disableBody(true, true);
-      this.isAlive = false;
-    }
-    // Ennemy kill Player
+
+    // Ennemy hit Player
     if ((this.body.touching.right && (this.world.player.body.touching.right || this.world.player.body.touching.left))
     || (this.body.touching.left && (this.world.player.body.touching.right || this.world.player.body.touching.left))
     && this.isAlive){
