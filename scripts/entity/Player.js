@@ -90,6 +90,7 @@ class Player extends Phaser.Physics.Arcade.Sprite{
       this.setVelocityX((this.xSpeed*.1)*this.dirX);
       this.isGettingKnockback = false;
     }else{
+      this.angle = 0;
       if(this.isGettingKnockback){
         this.setVelocityX((this.xSpeed*2)*this.knockbackDirX);
       }else{
@@ -143,7 +144,7 @@ class Player extends Phaser.Physics.Arcade.Sprite{
       if(this.anims.currentFrame.index == 5){
         console.log("slash");
         var slash = new Slashproj(scene,this.x+(50*this.dirX), this.y+20);
-        setTimeout(function(){slash.slashout()},500);
+        setTimeout(function(){slash.slashout()},50);
       }
       this.setVelocityX(0);
     }
@@ -188,7 +189,7 @@ class Player extends Phaser.Physics.Arcade.Sprite{
 
 
 
-      //console.log(this.dirX)
+    //console.log(this.dirX)
 
     // Prevent Wallcliping with fallspeed
     this.body.velocity.y = Math.min(800, Math.max(-800,this.body.velocity.y));

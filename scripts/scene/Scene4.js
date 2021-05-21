@@ -134,10 +134,10 @@ class Scene4 extends Phaser.Scene {
     this.heart = []; this.heartlight = [];
 
     for (let i = 0 ; i < lifeAmount ; i++){
-            this.heart[i] = this.add.sprite(16+i*50, 16, 'heart').setOrigin(0,0).setScrollFactor(0);
-            this.heart[i].scale = 2;
-            this.heartlight[i] = this.add.pointlight(this.heart[i].x+16, this.heart[i].y+16, 0, 50, 0.5);
-        };
+      this.heart[i] = this.add.sprite(16+i*50, 16, 'heart').setOrigin(0,0).setScrollFactor(0);
+      this.heart[i].scale = 2;
+      this.heartlight[i] = this.add.pointlight(this.heart[i].x+16, this.heart[i].y+16, 0, 50, 0.5);
+    };
     this.heartlight.forEach(l => {
       l.attenuation = 0.05;
       l.color.setTo(255, 80, 80);

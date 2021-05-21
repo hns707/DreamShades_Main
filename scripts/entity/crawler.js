@@ -13,6 +13,12 @@ class Crawler extends Phaser.Physics.Arcade.Sprite{
     this.setVelocity(-10,0);
     this.setBodySize(this.body.width-10,this.body.height-8);
 
+    this.knockbackDirX = 1;
+    this.isGettingHit = false;
+    this.hitTimer = 0;
+    this.maxHP = 2;
+    this.currentHP = this.maxHP;
+
     this.world = scene;
     this.scale = 3;
     this.isAlive = true;
@@ -55,16 +61,47 @@ class Crawler extends Phaser.Physics.Arcade.Sprite{
 
   upd(){
 
+
     this.anims.play('moving', true);
     if (this.body.velocity.x > 0){this.flipX = true;}
     else{this.flipX = false;}
 
+    if(this.isGettingHit){
+      if(this.hitTimer > 10){
+        this.isGettingHit = false;
+        this.setVelocity(10*this.knockbackDirX,0);
+
+      }else{
+        this.hitTimer++;
+      }
+
+    }
 
     // Ennemy hit Player
     if ((this.body.touching.right && (this.world.player.body.touching.right || this.world.player.body.touching.left))
     || (this.body.touching.left && (this.world.player.body.touching.right || this.world.player.body.touching.left))
     && this.isAlive){
       this.world.player.getHit(this.x);
+    }
+  }
+
+  isBefore(x){if(this.x < x){return true;}else{return false;}}
+
+  getHit(ex){
+    if(!this.isGettingHit){
+      this.isGettingHit = true;
+      this.knockbackDirX = 1;
+      if(this.isBefore(ex)){this.knockbackDirX = -1;}
+
+      if(this.currentHP!=0){ // avoid destroy null
+        this.currentHP -=1;
+      }
+      this.setVelocityX(300*this.knockbackDirX);
+      this.setVelocityY(-300);
+
+      if(this.currentHP==0){
+        this.setDeath();
+      }
     }
   }
 
