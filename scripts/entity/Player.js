@@ -22,6 +22,8 @@ class Player extends Phaser.Physics.Arcade.Sprite{
     this.dirX = 1;
     this.knockbackDirX = 1;
 
+    this.isInvulnerable = false;
+    this.invTimer = 0;
 
 
 
@@ -33,7 +35,7 @@ class Player extends Phaser.Physics.Arcade.Sprite{
     this.xSpeed = 0;
 
 
-    //this.debugText = scene.add.text(this.x, this.y, 'XY')
+    this.debugText = scene.add.text(this.x, this.y, 'XY')
 
 
     this.wlk = this.anims.create({
@@ -74,15 +76,16 @@ class Player extends Phaser.Physics.Arcade.Sprite{
     this.runKey = scene.input.keyboard.addKey('SHIFT'); // Run
     this.spKey = scene.input.keyboard.addKey('H'); // Special
 
-    this.stompSound = scene.sound.add('stomp');
+    this.slashSound = scene.sound.add('sw');
+    this.hitSound = scene.sound.add('phit');
 
   }
 
   move(scene,dt){
     // Debug Pos
-    //this.debugText.setText('X: ' + this.x + '\nY: ' + this.y);
-    //this.debugText.x = this.x - 30;
-    //this.debugText.y = this.y - 70;
+    this.debugText.setText('X: ' + this.x + '\nY: ' + this.y);
+    this.debugText.x = this.x - 30;
+    this.debugText.y = this.y - 70;
     // ^^^^^^
 
     //this.setVelocityX(this.xSpeed);
@@ -91,10 +94,20 @@ class Player extends Phaser.Physics.Arcade.Sprite{
       this.isGettingKnockback = false;
     }else{
       this.angle = 0;
-      if(this.isGettingKnockback){
+      if(this.isInvulnerable){
         this.setVelocityX((this.xSpeed*2)*this.knockbackDirX);
       }else{
         this.setVelocityX((this.xSpeed*2)*this.dirX);
+      }
+    }
+
+    // Invulnerability cooldown
+    if(this.isInvulnerable){
+      if(this.invTimer < 100){this.invTimer++;}
+      else{
+        this.isInvulnerable = false;
+        this.invTimer = 0;
+        this.setAlpha(1);
       }
     }
 
@@ -141,8 +154,10 @@ class Player extends Phaser.Physics.Arcade.Sprite{
     }
     else if(this.isAttacking){
       this.anims.play('attack',true);
+      if(this.anims.currentFrame.index == 3){
+      this.slashSound.play({volume:.5});
+    }
       if(this.anims.currentFrame.index == 5){
-        console.log("slash");
         var slash = new Slashproj(scene,this.x+(50*this.dirX), this.y+20);
         setTimeout(function(){slash.slashout()},50);
       }
@@ -163,7 +178,6 @@ class Player extends Phaser.Physics.Arcade.Sprite{
     if (this.spKey.isDown && !this.isAttacking && !this.cursors.right.isDown && !this.cursors.left.isDown){
       {
         this.isAttacking = true;
-
       }
     }
 
@@ -203,20 +217,28 @@ class Player extends Phaser.Physics.Arcade.Sprite{
   isPast(x){if(this.x > x){return true;}else{return false;}}
 
   getHit(ex){
-    this.knockbackDirX = 1;
-    if(this.isBefore(ex)){this.knockbackDirX = -1;}
-    this.isGettingKnockback = true;
-    if(this.currentHP!=0){ // avoid destroy null
-      this.currentHP -=1;
-      this.world.heart[this.currentHP].destroy();
-      this.world.heartlight[this.currentHP].destroy();
-    }
-    this.setVelocityX(5000*this.knockbackDirX);
-    this.xSpeed = 200;
-    this.setVelocityY(-400);
-    if(this.currentHP==0){
-      this.world.restart();
-    }
-  }
 
+    if(!this.isInvulnerable){
+      this.world.cameras.main.shake(100);
+      this.hitSound.play({volume:.5});
+      this.isInvulnerable = true; // Prevent one-shot
+      this.setAlpha(0.7);
+      //======================== HIT ===========================
+      this.knockbackDirX = 1;
+      if(this.isBefore(ex)){this.knockbackDirX = -1;}
+      this.isGettingKnockback = true;
+      if(this.currentHP!=0){ // avoid destroy null
+        this.currentHP -=1;
+        this.world.heart[this.currentHP].destroy();
+        this.world.heartlight[this.currentHP].destroy();
+      }
+      this.setVelocityX(5000*this.knockbackDirX);
+      this.xSpeed = 200;
+      this.setVelocityY(-400);
+      if(this.currentHP==0){
+        this.world.restart();
+      }
+    }
+    //===========================================================
+  }
 }

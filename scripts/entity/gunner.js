@@ -13,6 +13,7 @@ class Gunner extends Phaser.Physics.Arcade.Sprite{
     this.scale = 3;
     this.isAlive = true;
     this.dir = 1;
+    this.bullet = null;
 
     scene.time.addEvent({ delay: 1000, callback: this.shoot, callbackScope: this, loop: true });
 
@@ -47,7 +48,12 @@ class Gunner extends Phaser.Physics.Arcade.Sprite{
     if (this.x < this.world.player.x){this.flipX = true; this.dir = 1;}
     else{this.flipX = false; this.dir = -1;}
 
-
+    if(this.bullet){
+      if(this.bullet.body.blocked.left){
+        console.log("boop");
+        this.bullet.destroy();
+      }else{console.log("ee");}
+    }
 
 
     // Follow player by sight
@@ -71,9 +77,9 @@ class Gunner extends Phaser.Physics.Arcade.Sprite{
   shoot(){
     if(this.isAlive){
       if (this.world.player.x > this.x - 600 && this.world.player.x < this.x + 600){
-        if (this.world.player.y > this.y - 200 && this.world.player.y < this.y + 25){
+        if (this.world.player.y > this.y - 200 && this.world.player.y < this.y + 100){
           this.shotSound.play({volume:.5});
-          var bullet = new Gproj(this.world,this.x, this.y-15,'bullet').setVelocityX(250*this.dir);
+          this.bullet = new Gproj(this.world,this.x, this.y-15,'bullet').setVelocityX(250*this.dir);
         }
       }
     }

@@ -4,6 +4,8 @@ class Dialogbox extends Phaser.Physics.Arcade.Sprite{
     super(scene, x, y, 'opendialog');
     this.isOpen = false;
     this.world = scene;
+    this.whoTalk = 'nashdb';
+    this.textToDisplay = "empty";
     scene.add.existing(this);
     this.anims.create({
       key: 'open',
@@ -18,8 +20,8 @@ class Dialogbox extends Phaser.Physics.Arcade.Sprite{
 
     this.on('animationcomplete',function () {
       if(this.anims.currentAnim.key === 'open'){
-        this.ndb = scene.add.sprite(x, y, 'nashdb').setOrigin(0,0).setScrollFactor(0);
-        this.mytxt = scene.add.text(x+175,y+20,"[DEV] :\nHey! It's now working like a true HUD! HYPE !\nBut please don't mind and go ahead, be careful,\nthis level is still in construction.",{font: "30px visitor", fill:"#FFF"}).setOrigin(0,0).setScrollFactor(0);; // 50 chars per line
+        this.ndb = scene.add.sprite(x, y, this.whoTalk).setOrigin(0,0).setScrollFactor(0);
+        this.mytxt = scene.add.text(x+175,y+20,this.textToDisplay,{font: "30px visitor", fill:"#FFF"}).setOrigin(0,0).setScrollFactor(0);; // 50 chars per line
       }
     });
 
@@ -41,6 +43,7 @@ class Dialogbox extends Phaser.Physics.Arcade.Sprite{
       this.anims.playReverse('close', true);
     }
   }
+
 
 
 }

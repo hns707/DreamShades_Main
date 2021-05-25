@@ -5,7 +5,7 @@ class Crawler extends Phaser.Physics.Arcade.Sprite{
 
     scene.add.existing(this);
     scene.physics.add.existing(this);
-    scene.physics.add.overlap(scene.player, this);
+    scene.physics.add.overlap(scene.player, this, function(){scene.player.getHit(this.x);});
 
 
     this.setBounceX(1);
@@ -39,13 +39,13 @@ class Crawler extends Phaser.Physics.Arcade.Sprite{
     });
 
     this.killSound = scene.sound.add('splash');
+    this.hitSound = scene.sound.add('ehit');
 
 
 
   }
 
   setDeath(){
-    console.log("hit");
     this.killEffect();
     this.disableBody(true, true);
     this.isAlive = false;
@@ -78,17 +78,18 @@ class Crawler extends Phaser.Physics.Arcade.Sprite{
     }
 
     // Ennemy hit Player
-    if ((this.body.touching.right && (this.world.player.body.touching.right || this.world.player.body.touching.left))
-    || (this.body.touching.left && (this.world.player.body.touching.right || this.world.player.body.touching.left))
-    && this.isAlive){
-      this.world.player.getHit(this.x);
-    }
+    //if ((this.body.touching.right && (this.world.player.body.touching.right || this.world.player.body.touching.left))
+    //|| (this.body.touching.left && (this.world.player.body.touching.right || this.world.player.body.touching.left))
+    //&& this.isAlive){
+    //  this.world.player.getHit(this.x);
+    //}
   }
 
   isBefore(x){if(this.x < x){return true;}else{return false;}}
 
   getHit(ex){
     if(!this.isGettingHit){
+      this.hitSound.play({volume:.5});
       this.isGettingHit = true;
       this.knockbackDirX = 1;
       if(this.isBefore(ex)){this.knockbackDirX = -1;}

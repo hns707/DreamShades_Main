@@ -12,6 +12,8 @@ class Scene1 extends Phaser.Scene {
   }
 
   create(){
+    this.isLoading = false;
+
     this.anims.create({
       key: 'spin',
       frames: this.anims.generateFrameNumbers('cp', { start: 0, end: 50 }),
@@ -61,16 +63,19 @@ class Scene1 extends Phaser.Scene {
 
 
     this.input.keyboard.on('keydown-SPACE', function () {
-      this.cameras.main.fadeOut(1000, 0, 0, 0)
-      this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, (cam, effect) => {
-        this.scene.start("tiledGame");
-      })
-    }, this);
-    // :) (9)
-    this.input.keyboard.on('keydown-A', function () {
-      this.a.play({volume:.5});
-      this.add.sprite(Math.random()*game.config.width, Math.random()*game.config.height, 'cp').play('spin', true);
-    }, this);
+      if(!this.isLoading){
+        this.isLoading = true;
+        this.cameras.main.fadeOut(1000, 0, 0, 0)
+        this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, (cam, effect) => {
+          this.scene.start("tiledGame");
+        })
+      }}, this);
 
+      // :) (9)
+      this.input.keyboard.on('keydown-A', function () {
+        this.a.play({volume:.5});
+        this.add.sprite(Math.random()*game.config.width, Math.random()*game.config.height, 'cp').play('spin', true);
+      }, this);
+
+    }
   }
-}
