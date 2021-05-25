@@ -5,11 +5,14 @@ class Gproj extends Phaser.Physics.Arcade.Sprite{
 
 		scene.add.existing(this);
     scene.physics.add.existing(this);
-		scene.physics.add.overlap(scene.player, this, scene.restart, null, scene);
-		scene.physics.add.collider(this, scene.platforms, null, null, scene);
+		scene.physics.add.overlap(scene.player, this, function(){scene.player.getHit(this.x);});
     this.body.allowGravity = false;
     this.scale = 2;
 
+    }
+
+    projOut(){
+      this.destroy();
     }
 
     // WIP WIP WIP WIP WIP WIP WIP WIP

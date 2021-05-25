@@ -35,7 +35,7 @@ class Player extends Phaser.Physics.Arcade.Sprite{
     this.xSpeed = 0;
 
 
-    this.debugText = scene.add.text(this.x, this.y, 'XY')
+    //this.debugText = scene.add.text(this.x, this.y, 'XY')
 
 
     this.wlk = this.anims.create({
@@ -63,7 +63,7 @@ class Player extends Phaser.Physics.Arcade.Sprite{
     this.anims.create({
       key: 'attack',
       frames: this.anims.generateFrameNumbers('shell', { start: 15, end: 20 }),
-      frameRate: 10
+      frameRate: 20
     });
 
     this.on('animationcomplete',function () {
@@ -79,25 +79,39 @@ class Player extends Phaser.Physics.Arcade.Sprite{
     this.slashSound = scene.sound.add('sw');
     this.hitSound = scene.sound.add('phit');
 
+
+
+    this.fs1 = scene.sound.add('f1');
+    this.fs2 = scene.sound.add('f2');
+    this.fs3 = scene.sound.add('f3');
+    this.fs4 = scene.sound.add('f4');
+    this.fs5 = scene.sound.add('f5');
+
   }
 
   move(scene,dt){
     // Debug Pos
-    this.debugText.setText('X: ' + this.x + '\nY: ' + this.y);
-    this.debugText.x = this.x - 30;
-    this.debugText.y = this.y - 70;
+    //this.debugText.setText('X: ' + this.x + '\nY: ' + this.y);
+    //this.debugText.x = this.x - 30;
+    //this.debugText.y = this.y - 70;
     // ^^^^^^
+
 
     //this.setVelocityX(this.xSpeed);
     if(this.body.blocked.down){
-      this.setVelocityX((this.xSpeed*.1)*this.dirX);
-      this.isGettingKnockback = false;
-    }else{
-      this.angle = 0;
-      if(this.isInvulnerable){
-        this.setVelocityX((this.xSpeed*2)*this.knockbackDirX);
+      if(this.anims.currentAnim.key === 'walk'){
+        if( this.anims.currentFrame.index == 2 || this.anims.currentFrame.index == 5){
+          this.playRandomFs();
+        }
+        this.setVelocityX((this.xSpeed*.1)*this.dirX);
+        this.isGettingKnockback = false;
       }else{
-        this.setVelocityX((this.xSpeed*2)*this.dirX);
+        this.angle = 0;
+        if(this.isInvulnerable){
+          this.setVelocityX((this.xSpeed*2)*this.knockbackDirX);
+        }else{
+          this.setVelocityX((this.xSpeed*2)*this.dirX);
+        }
       }
     }
 
@@ -155,8 +169,8 @@ class Player extends Phaser.Physics.Arcade.Sprite{
     else if(this.isAttacking){
       this.anims.play('attack',true);
       if(this.anims.currentFrame.index == 3){
-      this.slashSound.play({volume:.5});
-    }
+        this.slashSound.play({volume:.5});
+      }
       if(this.anims.currentFrame.index == 5){
         var slash = new Slashproj(scene,this.x+(50*this.dirX), this.y+20);
         setTimeout(function(){slash.slashout()},50);
@@ -241,4 +255,16 @@ class Player extends Phaser.Physics.Arcade.Sprite{
     }
     //===========================================================
   }
+
+  playRandomFs(){
+    let rand = Math.floor(Math.random() * 5);
+    switch (rand) {
+      case 0:this.fs1.play({volume:.1});break;
+      case 1:this.fs2.play({volume:.1});break;
+      case 2:this.fs3.play({volume:.1});break;
+      case 3:this.fs4.play({volume:.1});break;
+      case 4:this.fs5.play({volume:.1});break;
+    }
+  }
+
 }

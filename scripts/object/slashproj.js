@@ -8,6 +8,9 @@ class Slashproj extends Phaser.Physics.Arcade.Sprite{
     scene.crawlerContainer.iterate(crawlerMonster => {
       scene.physics.add.overlap(crawlerMonster, this, function(){crawlerMonster.getHit(scene.player.x)}, null, scene);
     })
+    scene.gunnerContainer.iterate(gunnerMonster => {
+      scene.physics.add.overlap(gunnerMonster, this, function(){gunnerMonster.getHit(scene.player.x)}, null, scene);
+    })
     this.scale = 3;
     this.body.allowGravity = false;
     this.world = scene;

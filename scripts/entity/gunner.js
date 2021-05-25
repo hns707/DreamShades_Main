@@ -5,7 +5,7 @@ class Gunner extends Phaser.Physics.Arcade.Sprite{
 
     scene.add.existing(this);
     scene.physics.add.existing(this);
-    scene.physics.add.collider(scene.player, this);
+    scene.physics.add.overlap(scene.player, this, function(){scene.player.getHit(this.x);});
 
     this.setBodySize(this.body.width-15,this.body.height-9);
     this.setGravityY(5000)
@@ -13,9 +13,14 @@ class Gunner extends Phaser.Physics.Arcade.Sprite{
     this.scale = 3;
     this.isAlive = true;
     this.dir = 1;
-    this.bullet = null;
 
-    scene.time.addEvent({ delay: 1000, callback: this.shoot, callbackScope: this, loop: true });
+    this.knockbackDirX = 1;
+    this.isGettingHit = false;
+    this.hitTimer = 0;
+    this.maxHP = 1;
+    this.currentHP = this.maxHP;
+
+    scene.time.addEvent({ delay: 2000, callback: this.shoot, callbackScope: this, loop: true });
 
     this.anims.create({
       key: 'moving',
@@ -33,7 +38,14 @@ class Gunner extends Phaser.Physics.Arcade.Sprite{
 
     this.killSound = scene.sound.add('splash');
     this.shotSound = scene.sound.add('shot');
+    this.hitSound = scene.sound.add('ehit');
 
+  }
+
+  setDeath(){
+    this.killEffect();
+    this.disableBody(true, true);
+    this.isAlive = false;
   }
 
   killEffect(){
@@ -48,29 +60,43 @@ class Gunner extends Phaser.Physics.Arcade.Sprite{
     if (this.x < this.world.player.x){this.flipX = true; this.dir = 1;}
     else{this.flipX = false; this.dir = -1;}
 
-    if(this.bullet){
-      if(this.bullet.body.blocked.left){
-        console.log("boop");
-        this.bullet.destroy();
-      }else{console.log("ee");}
+
+    if(this.isGettingHit){
+      if(this.hitTimer > 10){
+        this.isGettingHit = false;
+        this.setVelocity(10*this.knockbackDirX,0);
+
+      }else{
+        this.hitTimer++;
+      }
+
     }
+
 
 
     // Follow player by sight
     if(this.body.touching.down){this.body.immovable = true;this.body.allowGravity = false;}
 
-    // Player kill Ennemy
-    if (this.body.touching.up && this.isAlive){
-      this.world.player.setVelocityY(-400);
-      this.killEffect();
-      this.disableBody(true, true);
-      this.isAlive = false;
-    }
-    // Ennemy kill Player
-    if ((this.body.touching.right && (this.world.player.body.touching.right || this.world.player.body.touching.left))
-    || (this.body.touching.left && (this.world.player.body.touching.right || this.world.player.body.touching.left))
-    && this.isAlive){
-      this.world.restart();
+
+  }
+
+  isBefore(x){if(this.x < x){return true;}else{return false;}}
+  getHit(ex){
+    if(!this.isGettingHit){
+      this.hitSound.play({volume:.5});
+      this.isGettingHit = true;
+      this.knockbackDirX = 1;
+      if(this.isBefore(ex)){this.knockbackDirX = -1;}
+
+      if(this.currentHP!=0){ // avoid destroy null
+        this.currentHP -=1;
+      }
+      this.setVelocityX(300*this.knockbackDirX);
+      this.setVelocityY(-300);
+
+      if(this.currentHP==0){
+        this.setDeath();
+      }
     }
   }
 
@@ -79,7 +105,8 @@ class Gunner extends Phaser.Physics.Arcade.Sprite{
       if (this.world.player.x > this.x - 600 && this.world.player.x < this.x + 600){
         if (this.world.player.y > this.y - 200 && this.world.player.y < this.y + 100){
           this.shotSound.play({volume:.5});
-          this.bullet = new Gproj(this.world,this.x, this.y-15,'bullet').setVelocityX(250*this.dir);
+          let bullet = new Gproj(this.world,this.x, this.y-15,'bullet').setVelocityX(250*this.dir);
+      		this.world.physics.add.collider(bullet, this.world.platforms, function(){bullet.projOut();}, null, this.world);
         }
       }
     }

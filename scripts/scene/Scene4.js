@@ -16,6 +16,13 @@ class Scene4 extends Phaser.Scene {
     this.load.audio('bend', [ 'assets/audio/button_end.ogg', 'assets/audio/button_end.mp3' ]);
     this.load.audio('bgm', [ 'assets/audio/crystal-exploration1.ogg', 'assets/audio/crystal-exploration1.mp3' ]);
 
+
+    this.load.audio('f1', [ 'assets/audio/footsteps/f1.ogg', 'assets/audio/footsteps/f1.mp3' ]);
+    this.load.audio('f2', [ 'assets/audio/footsteps/f2.ogg', 'assets/audio/footsteps/f2.mp3' ]);
+    this.load.audio('f3', [ 'assets/audio/footsteps/f3.ogg', 'assets/audio/footsteps/f3.mp3' ]);
+    this.load.audio('f4', [ 'assets/audio/footsteps/f4.ogg', 'assets/audio/footsteps/f4.mp3' ]);
+    this.load.audio('f5', [ 'assets/audio/footsteps/f5.ogg', 'assets/audio/footsteps/f5.mp3' ]);
+
     // Background
     this.load.image('blank', 'assets/blank.png');
     this.load.image('map1_bg', 'assets/map1/map1-bg.jpg');
@@ -113,7 +120,7 @@ class Scene4 extends Phaser.Scene {
     this.doorDB.setText('shelldb',"[Shell] :\nThis door seems sealed, there must be a way to\nopen it.");
 
     // Player
-    this.player=new Player(this,644,2052,'shell'); // 150 / 2850 || Default
+    this.player=new Player(this,150,2850,'shell'); // 150 / 2850 || Default
     this.physics.add.collider(this.player, this.platforms);
     //BTNS
     this.physics.add.collider(this.player, this.btn);
