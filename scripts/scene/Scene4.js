@@ -46,7 +46,7 @@ class Scene4 extends Phaser.Scene {
     this.load.image('shelldb', 'assets/shelldialog.png');
 
     // Spritesheets
-    this.load.spritesheet('shell', 'assets/shell3.png', { frameWidth: 128, frameHeight: 64 } );
+    this.load.spritesheet('shell', 'assets/shellPlus.png', { frameWidth: 128, frameHeight: 64 } );
     this.load.spritesheet('crawler', 'assets/crawler2.png', { frameWidth: 32, frameHeight: 32 } );
     this.load.spritesheet('gunner', 'assets/gunnerb.png', { frameWidth: 32, frameHeight: 32 } );
     this.load.spritesheet('expl', 'assets/explosion_monster2.png', { frameWidth: 32, frameHeight: 32 } );

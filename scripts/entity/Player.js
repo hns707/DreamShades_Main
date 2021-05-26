@@ -17,7 +17,8 @@ class Player extends Phaser.Physics.Arcade.Sprite{
     this.currentHP = this.maxHP;
 
     // Player Status
-    this.isAttacking = false;
+    this.isAttackingStill = false;
+    this.isAttackingMove = false;
     this.isGettingKnockback = false;
     this.dirX = 1;
     this.knockbackDirX = 1;
@@ -65,10 +66,16 @@ class Player extends Phaser.Physics.Arcade.Sprite{
       frames: this.anims.generateFrameNumbers('shell', { start: 15, end: 20 }),
       frameRate: 20
     });
+    this.anims.create({
+      key: 'moveattack',
+      frames: this.anims.generateFrameNumbers('shell', { start: 21, end: 26 }),
+      frameRate: 20
+    });
+
 
     this.on('animationcomplete',function () {
       if(this.anims.currentAnim.key === 'attack'){
-        this.isAttacking = false;
+        this.isAttackingStill = false;
       }
     });
 
@@ -106,13 +113,15 @@ class Player extends Phaser.Physics.Arcade.Sprite{
         this.setVelocityX((this.xSpeed*.1)*this.dirX);
         this.isGettingKnockback = false;
       }else{
-        this.angle = 0;
+
         if(this.isInvulnerable){
           this.setVelocityX((this.xSpeed*2)*this.knockbackDirX);
         }else{
           this.setVelocityX((this.xSpeed*2)*this.dirX);
         }
       }
+    }else{
+      this.angle = 0;
     }
 
     // Invulnerability cooldown
@@ -129,7 +138,8 @@ class Player extends Phaser.Physics.Arcade.Sprite{
 
     if (this.cursors.left.isDown)
     {
-      this.isAttacking = false;
+      if(this.angle > 0){ this.angle = 0;}
+      this.isAttackingStill = false;
       this.setVelocityX(-200 - this.xSpeed);
       this.dirX = -1;
       this.xAccel = true;
@@ -138,7 +148,7 @@ class Player extends Phaser.Physics.Arcade.Sprite{
       if(!this.flipX){this.flipX = true;}
       if(this.body.blocked.down){
         if(this.xSpeed < 150 && this.xAccel){
-          this.xSpeed += 2; //upspeed add is speed increase over frames
+          this.xSpeed += 10; //upspeed add is speed increase over frames
           this.wlk.frameRate = 10 + this.xSpeed * 0.001;
         }
 
@@ -149,7 +159,8 @@ class Player extends Phaser.Physics.Arcade.Sprite{
 
     else if (this.cursors.right.isDown)
     {
-      this.isAttacking = false;
+      if(this.angle < 0){ this.angle = 0;}
+      this.isAttackingStill = false;
       this.setVelocityX(200 + this.xSpeed);
       this.dirX = 1;
       this.xAccel = true;
@@ -166,7 +177,7 @@ class Player extends Phaser.Physics.Arcade.Sprite{
 
       //if(this.runKey.isDown){this.setVelocityX(300);}
     }
-    else if(this.isAttacking){
+    else if(this.isAttackingStill){
       this.anims.play('attack',true);
       if(this.anims.currentFrame.index == 3){
         this.slashSound.play({volume:.5});
@@ -182,16 +193,16 @@ class Player extends Phaser.Physics.Arcade.Sprite{
       this.angle = 0;
       this.xAccel = false;
       if(this.xSpeed > 0){
-        this.xSpeed -= 4; //upspeed add is speed increase over frames
+        this.xSpeed -= 10; //upspeed add is speed increase over frames
       }else if(this.xSpeed < 0){this.xSpeed = 0;this.isGettingKnockback = false;}
       //this.setVelocityX(0);
       if(!this.body.blocked.down && !this.body.blocked.up ){this.anims.play('fall');}else{this.anims.play('idle', true);this.wlk.frameRate = 10;  }
     }
 
     // ATTACK
-    if (this.spKey.isDown && !this.isAttacking && !this.cursors.right.isDown && !this.cursors.left.isDown){
+    if (this.spKey.isDown && !this.isAttackingStill && !this.cursors.right.isDown && !this.cursors.left.isDown){
       {
-        this.isAttacking = true;
+        this.isAttackingStill = true;
       }
     }
 
