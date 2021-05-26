@@ -110,6 +110,7 @@ class Player extends Phaser.Physics.Arcade.Sprite{
         if( this.anims.currentFrame.index == 2 || this.anims.currentFrame.index == 5){
           this.playRandomFs();
         }
+
         this.setVelocityX((this.xSpeed*.1)*this.dirX);
         this.isGettingKnockback = false;
       }else{
@@ -192,6 +193,7 @@ class Player extends Phaser.Physics.Arcade.Sprite{
     {
       this.angle = 0;
       this.xAccel = false;
+      this.isAttackingMove = false;
       if(this.xSpeed > 0){
         this.xSpeed -= 10; //upspeed add is speed increase over frames
       }else if(this.xSpeed < 0){this.xSpeed = 0;this.isGettingKnockback = false;}
@@ -200,9 +202,15 @@ class Player extends Phaser.Physics.Arcade.Sprite{
     }
 
     // ATTACK
-    if (this.spKey.isDown && !this.isAttackingStill && !this.cursors.right.isDown && !this.cursors.left.isDown){
-      {
+    if (this.spKey.isDown && !this.isAttackingStill){
+      if(!this.cursors.right.isDown && !this.cursors.left.isDown){
         this.isAttackingStill = true;
+      }
+    }
+    // ATTACK /W MOVE
+    if (this.spKey.isDown && !this.isAttackingMove){
+      if(this.cursors.right.isDown || this.cursors.left.isDown){
+        this.isAttackingMove = true;
       }
     }
 
