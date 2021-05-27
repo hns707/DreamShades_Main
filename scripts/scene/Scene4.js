@@ -25,7 +25,8 @@ class Scene4 extends Phaser.Scene {
 
     // Background
     this.load.image('blank', 'assets/blank.png');
-    this.load.image('map1_bg', 'assets/map1/map1-bg.jpg');
+    this.load.image('map1-bg', 'assets/map1/map1-bg.png');
+    this.load.image('map1-fg', 'assets/map1/map1-fg.png');
     this.load.image('fog', 'assets/map1/loopfog.png');
 
     // objects
@@ -46,16 +47,16 @@ class Scene4 extends Phaser.Scene {
     this.load.image('shelldb', 'assets/shelldialog.png');
 
     // Spritesheets
-    this.load.spritesheet('shell', 'assets/shellPlus.png', { frameWidth: 128, frameHeight: 64 } );
+    this.load.spritesheet('shell', 'assets/shell.png', { frameWidth: 128, frameHeight: 64 } );
     this.load.spritesheet('crawler', 'assets/crawler2.png', { frameWidth: 32, frameHeight: 32 } );
-    this.load.spritesheet('gunner', 'assets/gunnerb.png', { frameWidth: 32, frameHeight: 32 } );
+    this.load.spritesheet('gunner', 'assets/gunnermonkb.png', { frameWidth: 32, frameHeight: 32 } );
     this.load.spritesheet('expl', 'assets/explosion_monster2.png', { frameWidth: 32, frameHeight: 32 } );
 
     this.load.spritesheet('opendialog', 'assets/opendial2.png',{frameWidth: 1000, frameHeight: 160 });
 
     // Map & Tileset
     this.load.image('map1_ts', 'assets/map1/tiles.png');
-    this.load.tilemapTiledJSON('map1', 'assets/map1/map1_i.json');
+    this.load.tilemapTiledJSON('map1', 'assets/map1/map1_j.json');
   }
 
   create(){
@@ -66,7 +67,38 @@ class Scene4 extends Phaser.Scene {
 
 
     // Backgrounds
-    this.add.sprite(2465, 1665, 'map1_bg');
+    this.add.sprite(2465, 1665, 'map1-bg');
+
+    // CA BRILLE AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+    // Y'EN A PARTOUT AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+    // C'EST PAS OPTI MAIS VOILA RBBRBRBRRBRBRBRBRBBRBR
+    this.lightbulbs = [];
+    this.lightbulbs[0] = this.add.pointlight(2460, 2350, 0, 50, 0.5);
+    this.lightbulbs[1] = this.add.pointlight(2490, 2347, 0, 50, 0.5);
+    this.lightbulbs[2] = this.add.pointlight(2520, 2310, 0, 50, 0.5);
+    this.lightbulbs[3] = this.add.pointlight(2550, 2290, 0, 50, 0.5);
+    this.lightbulbs[4] = this.add.pointlight(2595, 2265, 0, 50, 0.5);
+    this.lightbulbs[5] = this.add.pointlight(2655, 2195, 0, 50, 0.5);
+    this.lightbulbs[6] = this.add.pointlight(2522, 2485, 0, 50, 0.5);
+    this.lightbulbs[7] = this.add.pointlight(2560, 2455, 0, 50, 0.5);
+    this.lightbulbs[8] = this.add.pointlight(2592, 2425, 0, 50, 0.5);
+    this.lightbulbs[9] = this.add.pointlight(2640, 2390, 0, 50, 0.5);
+    this.lightbulbs[10] = this.add.pointlight(2670, 2370, 0, 50, 0.5);
+    this.lightbulbs[11] = this.add.pointlight(2535, 2700, 0, 50, 0.5);
+    this.lightbulbs[12] = this.add.pointlight(2620, 2650, 0, 50, 0.5);
+    this.lightbulbs[13] = this.add.pointlight(2920, 2780, 0, 50, 0.5);
+    this.lightbulbs[14] = this.add.pointlight(2940, 2780, 0, 50, 0.5);
+    this.lightbulbs[15] = this.add.pointlight(2985, 2780, 0, 50, 0.5);
+    this.lightbulbs[16] = this.add.pointlight(3025, 2700, 0, 50, 0.5);
+    this.lightbulbs[17] = this.add.pointlight(3350, 2145, 0, 50, 0.5);
+    this.lightbulbs[18] = this.add.pointlight(3400, 2145, 0, 50, 0.5);
+
+
+    for (let i = 0 ; i < 19 ; i++){
+      this.lightbulbs[i].attenuation = 0.04;
+      this.lightbulbs[i].color.setTo(171, 17, 221);
+    };
+    // ======================================================
 
 
     // Buttons & Platforms
@@ -120,13 +152,13 @@ class Scene4 extends Phaser.Scene {
     this.doorDB.setText('shelldb',"[Shell] :\nThis door seems sealed, there must be a way to\nopen it.");
 
     // Player
-    this.player=new Player(this,150,2850,'shell'); // 150 / 2850 || Default
+    this.player=new Player(this,3270,2308,'shell'); // 150 / 2850 || Default
     this.physics.add.collider(this.player, this.platforms);
     //BTNS
     this.physics.add.collider(this.player, this.btn);
     this.physics.add.collider(this.player, this.btn2);
     this.physics.add.collider(this.player, this.btn3);
-    this.player.setCollideWorldBounds(true)
+    this.player.setCollideWorldBounds(true);
 
 
 
@@ -151,6 +183,7 @@ class Scene4 extends Phaser.Scene {
     });
 
 
+    //this.add.sprite(2465, 1665, 'map1-fg');
     this.fog = this.add.tileSprite(0,0, this.map.widthInPixels+64, this.map.heightInPixels+64, "fog").setOrigin(0,0).setAlpha(0.2);
 
     //Infos
