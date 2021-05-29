@@ -15,7 +15,8 @@ class Scene4 extends Phaser.Scene {
     this.load.audio('phit', [ 'assets/audio/hit_metal.ogg', 'assets/audio/hit_metal.mp3' ]);
     this.load.audio('bend', [ 'assets/audio/button_end.ogg', 'assets/audio/button_end.mp3' ]);
     this.load.audio('bgm', [ 'assets/audio/crystal-exploration1.ogg', 'assets/audio/crystal-exploration1.mp3' ]);
-
+    this.load.audio('crystalIn', [ 'assets/audio/crystal_set.ogg', 'assets/audio/crystal_set.mp3' ]);
+    this.load.audio('flameon', [ 'assets/audio/flames_on.ogg', 'assets/audio/flames_on.mp3' ]);
 
     this.load.audio('f1', [ 'assets/audio/footsteps/f1.ogg', 'assets/audio/footsteps/f1.mp3' ]);
     this.load.audio('f2', [ 'assets/audio/footsteps/f2.ogg', 'assets/audio/footsteps/f2.mp3' ]);
@@ -35,10 +36,11 @@ class Scene4 extends Phaser.Scene {
     this.load.image('help', 'assets/helpc.png');
     this.load.image('button', 'assets/map1/button.png');
     this.load.image('trigpf', 'assets/map1/triggered_platform.png');
-    this.load.image('door', 'assets/map1/door.png');
 
     //HUD
     this.load.image('heart', 'assets/heart.png');
+    this.load.image('nocrystal', 'assets/nocrystal.png');
+    this.load.image('yescrystal', 'assets/crystal.png');
 
 
     // Dialogbox
@@ -47,16 +49,17 @@ class Scene4 extends Phaser.Scene {
     this.load.image('shelldb', 'assets/shelldialog.png');
 
     // Spritesheets
-    this.load.spritesheet('shell', 'assets/shell.png', { frameWidth: 128, frameHeight: 64 } );
+    this.load.spritesheet('shell', 'assets/shell2.png', { frameWidth: 128, frameHeight: 64 } );
     this.load.spritesheet('crawler', 'assets/crawler2.png', { frameWidth: 32, frameHeight: 32 } );
     this.load.spritesheet('gunner', 'assets/gunnermonkb.png', { frameWidth: 32, frameHeight: 32 } );
     this.load.spritesheet('expl', 'assets/explosion_monster2.png', { frameWidth: 32, frameHeight: 32 } );
+    this.load.spritesheet('bossdoor', 'assets/map1/bossdoor.png', { frameWidth: 128, frameHeight: 128 } );
 
     this.load.spritesheet('opendialog', 'assets/opendial2.png',{frameWidth: 1000, frameHeight: 160 });
 
     // Map & Tileset
     this.load.image('map1_ts', 'assets/map1/tiles.png');
-    this.load.tilemapTiledJSON('map1', 'assets/map1/map1_j.json');
+    this.load.tilemapTiledJSON('map1', 'assets/map1/map1_k.json');
   }
 
   create(){
@@ -69,37 +72,7 @@ class Scene4 extends Phaser.Scene {
     // Backgrounds
     this.add.sprite(2465, 1665, 'map1-bg');
 
-    // CA BRILLE AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-    // Y'EN A PARTOUT AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-    // C'EST PAS OPTI MAIS VOILA RBBRBRBRRBRBRBRBRBBRBR
-    this.lightbulbs = [];
-    this.lightbulbs[0] = this.add.pointlight(2460, 2350, 0, 50, 0.5);
-    this.lightbulbs[1] = this.add.pointlight(2490, 2347, 0, 50, 0.5);
-    this.lightbulbs[2] = this.add.pointlight(2520, 2310, 0, 50, 0.5);
-    this.lightbulbs[3] = this.add.pointlight(2550, 2290, 0, 50, 0.5);
-    this.lightbulbs[4] = this.add.pointlight(2595, 2265, 0, 50, 0.5);
-    this.lightbulbs[5] = this.add.pointlight(2655, 2195, 0, 50, 0.5);
-    this.lightbulbs[6] = this.add.pointlight(2522, 2485, 0, 50, 0.5);
-    this.lightbulbs[7] = this.add.pointlight(2560, 2455, 0, 50, 0.5);
-    this.lightbulbs[8] = this.add.pointlight(2592, 2425, 0, 50, 0.5);
-    this.lightbulbs[9] = this.add.pointlight(2640, 2390, 0, 50, 0.5);
-    this.lightbulbs[10] = this.add.pointlight(2670, 2370, 0, 50, 0.5);
-    this.lightbulbs[11] = this.add.pointlight(2535, 2700, 0, 50, 0.5);
-    this.lightbulbs[12] = this.add.pointlight(2620, 2650, 0, 50, 0.5);
-    this.lightbulbs[13] = this.add.pointlight(2920, 2780, 0, 50, 0.5);
-    this.lightbulbs[14] = this.add.pointlight(2940, 2780, 0, 50, 0.5);
-    this.lightbulbs[15] = this.add.pointlight(2985, 2780, 0, 50, 0.5);
-    this.lightbulbs[16] = this.add.pointlight(3025, 2700, 0, 50, 0.5);
-    this.lightbulbs[17] = this.add.pointlight(3350, 2145, 0, 50, 0.5);
-    this.lightbulbs[18] = this.add.pointlight(3400, 2145, 0, 50, 0.5);
-
-
-    for (let i = 0 ; i < 19 ; i++){
-      this.lightbulbs[i].attenuation = 0.04;
-      this.lightbulbs[i].color.setTo(171, 17, 221);
-    };
-    // ======================================================
-
+    this.addlightbulbs();
 
     // Buttons & Platforms
     this.btn = new Button(this,3325,2030, 'button');
@@ -112,24 +85,7 @@ class Scene4 extends Phaser.Scene {
     this.tp3 = new Trigger_Platform(this, 1150, 560, 'trigpf');
 
     //End door
-    this.door = this.add.sprite(4600, 2240, 'door');
-    this.door.scale = 3;
-    this.doorlights = [];
-
-    this.doorlights[0] = this.add.pointlight(4488, 2195, 0, 50, 0.5);
-    this.doorlights[1] = this.add.pointlight(4488, 2310, 0, 50, 0.5);
-    this.doorlights[2] = this.add.pointlight(4708, 2195, 0, 50, 0.5);
-    this.doorlights[3] = this.add.pointlight(4708, 2310, 0, 50, 0.5);
-    this.doorlights[4] = this.add.pointlight(4598, 2075, 0, 50, 0.5);
-
-    for (let i = 0 ; i < 5 ; i++){
-      this.doorlights[i].attenuation = 0.04;
-      this.doorlights[i].color.setTo(171, 17, 221);
-    };
-
-
-
-
+    this.door = new Bossdoor(this, 4600, 2240, 'bossdoor');
 
 
     // Tilemap
@@ -147,12 +103,13 @@ class Scene4 extends Phaser.Scene {
 
     //NPC Test
     this.npctest=new Npc(this,900,2910,'mark').setAlpha(0);
-    this.npctest.setText('nashdb',"[DEV] :\nThis level is still under construction, you may\nbe stucked at some point, have fun!");
+    this.npctest.setText('nashdb',"[DEV] :\nThis level is still under construction, you may\nbe stucked at some point, have fun!",false);
+
     this.doorDB=new Npc(this,4595,2370,'mark').setAlpha(0);
-    this.doorDB.setText('shelldb',"[Shell] :\nThis door seems sealed, there must be a way to\nopen it.");
+    this.doorDB.setText('shelldb',"[Stell] :\nThis door seems sealed.\nMaybe if I find enough of these crystals shards\nto fill all the slots..",false);
 
     // Player
-    this.player=new Player(this,3270,2308,'shell'); // 150 / 2850 || Default
+    this.player=new Player(this,150,2850,'shell'); // 150 / 2850 || Default
     this.physics.add.collider(this.player, this.platforms);
     //BTNS
     this.physics.add.collider(this.player, this.btn);
@@ -160,6 +117,26 @@ class Scene4 extends Phaser.Scene {
     this.physics.add.collider(this.player, this.btn3);
     this.player.setCollideWorldBounds(true);
 
+
+    //Crystals
+    this.crystalBox = [];
+    this.crystalBox[0] = new Crystal(this, 700, 2884, 'yescrystal');
+    this.crystalBox[1] = new Crystal(this, 3520, 2756, 'yescrystal');
+    this.crystalBox[2] = new Crystal(this, 225, 260, 'yescrystal');
+    this.crystalBox[3] = new Crystal(this, 2600, 708, 'yescrystal');
+    this.crystalBox[4] = new Crystal(this, 4537, 772, 'yescrystal');
+
+    // Door testing (Start at : 4124 , 2372)
+    //this.crystalBox[5] = new Crystal(this, 4337, 2372, 'yescrystal');
+    //this.crystalBox[6] = new Crystal(this, 4337, 2372, 'yescrystal');
+    //this.crystalBox[7] = new Crystal(this, 4337, 2372, 'yescrystal');
+    //this.crystalBox[8] = new Crystal(this, 4337, 2372, 'yescrystal');
+    //this.crystalBox[9] = new Crystal(this, 4337, 2372, 'yescrystal');
+
+
+    this.crystalBox.forEach(crstl => {
+      this.physics.add.overlap(crstl, this.player, function(){crstl.pickUp();}, null, this);
+    })
 
 
     // Crawlers spawn
@@ -183,7 +160,6 @@ class Scene4 extends Phaser.Scene {
     });
 
 
-    //this.add.sprite(2465, 1665, 'map1-fg');
     this.fog = this.add.tileSprite(0,0, this.map.widthInPixels+64, this.map.heightInPixels+64, "fog").setOrigin(0,0).setAlpha(0.2);
 
     //Infos
@@ -202,6 +178,30 @@ class Scene4 extends Phaser.Scene {
     // ==============================================================================
     let lifeAmount = this.player.maxHP;
     this.heart = []; this.heartlight = [];
+    this.crystals = []; this.crystalLight = [];
+
+    for (let i = 0 ; i < 5 ; i++){
+      this.crystals[i] = this.add.sprite(16+i*50, 64, 'nocrystal').setOrigin(0,0).setScrollFactor(0).setAlpha(0.7);
+      this.crystals[i].scale = 2;
+      this.crystalLight[i] = this.add.pointlight(this.crystals[i].x+16, this.crystals[i].y+16, 0, 50, 0.5);
+    };
+
+    this.crystalLight.forEach(c => {
+
+      c.setScrollFactor(0);
+      this.tweens.add({
+        targets:c,
+        duration:2000,
+        yoyo: true,
+        repeat:-1,
+        delay:Math.random()*1000,
+        alpha:{
+          startDelay:Math.random()*5000,
+          from:0.5,
+          to:1,
+        }
+      })
+    });
 
     for (let i = 0 ; i < lifeAmount ; i++){
       this.heart[i] = this.add.sprite(16+i*50, 16, 'heart').setOrigin(0,0).setScrollFactor(0);
@@ -258,10 +258,12 @@ class Scene4 extends Phaser.Scene {
     this.gunnerContainer.each(function (child) {child.upd();});
 
     //this.iNext.upd(delta);
+    this.crystalBox.forEach(crstl => {crstl.upd(delta)});
 
     //mmmmm
     this.npctest.playerQuery();
-    this.doorDB.playerQuery();
+    if(this.doorDB.isEnabled){this.doorDB.playerQuery();}
+    if(this.door.onGoing){this.door.doorAnimCheck();}
 
     // Connect buttons to fpfs
     this.btn.press(); if(this.btn.doEffect){this.btn.action(0,this.tp1);}
@@ -275,8 +277,58 @@ class Scene4 extends Phaser.Scene {
     if(this.player.isBelow(this.map.heightInPixels+50)){this.restart();}
 
   }
-
-
-
   restart(){this.bgm.stop();this.scene.start("tiledGame");}
+
+  outOfCinematic(isDoor){ // After pickup only
+    this.dialbox.call();
+    this.setPlayerLock(false);
+    if(isDoor){this.door.playAnimation();}
+  }
+
+  setPlayerLock(bool){
+    this.player.controlsLocked = bool;
+  }
+
+  addlightbulbs(){
+    // CA BRILLE AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+    // Y'EN A PARTOUT AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+    // C'EST PAS OPTI MAIS VOILA RBBRBRBRRBRBRBRBRBBRBR
+    this.lightbulbs = [];
+    this.lightbulbs[0] = this.add.pointlight(2460, 2350, 0, 50, 0.5);
+    this.lightbulbs[1] = this.add.pointlight(2490, 2347, 0, 50, 0.5);
+    this.lightbulbs[2] = this.add.pointlight(2520, 2310, 0, 50, 0.5);
+    this.lightbulbs[3] = this.add.pointlight(2550, 2290, 0, 50, 0.5);
+    this.lightbulbs[4] = this.add.pointlight(2595, 2265, 0, 50, 0.5);
+    this.lightbulbs[5] = this.add.pointlight(2655, 2195, 0, 50, 0.5);
+    this.lightbulbs[6] = this.add.pointlight(2522, 2485, 0, 50, 0.5);
+    this.lightbulbs[7] = this.add.pointlight(2560, 2455, 0, 50, 0.5);
+    this.lightbulbs[8] = this.add.pointlight(2592, 2425, 0, 50, 0.5);
+    this.lightbulbs[9] = this.add.pointlight(2640, 2390, 0, 50, 0.5);
+    this.lightbulbs[10] = this.add.pointlight(2670, 2370, 0, 50, 0.5);
+    this.lightbulbs[11] = this.add.pointlight(2535, 2700, 0, 50, 0.5);
+    this.lightbulbs[12] = this.add.pointlight(2620, 2650, 0, 50, 0.5);
+    this.lightbulbs[13] = this.add.pointlight(2920, 2780, 0, 50, 0.5);
+    this.lightbulbs[14] = this.add.pointlight(2940, 2780, 0, 50, 0.5);
+    this.lightbulbs[15] = this.add.pointlight(2985, 2780, 0, 50, 0.5);
+    this.lightbulbs[16] = this.add.pointlight(3025, 2700, 0, 50, 0.5);
+    this.lightbulbs[17] = this.add.pointlight(3350, 2145, 0, 50, 0.5);
+    this.lightbulbs[18] = this.add.pointlight(3400, 2145, 0, 50, 0.5);
+
+    this.lightbulbs[19] = this.add.pointlight(4027, 2520, 0, 50, 0.5);
+    this.lightbulbs[20] = this.add.pointlight(4080, 2500, 0, 50, 0.5);
+    this.lightbulbs[21] = this.add.pointlight(4005, 2630, 0, 50, 0.5);
+
+    this.lightbulbs[22] = this.add.pointlight(4440, 1965, 0, 50, 0.5);
+    this.lightbulbs[23] = this.add.pointlight(4480, 1995, 0, 50, 0.5);
+    this.lightbulbs[24] = this.add.pointlight(4522, 1870, 0, 50, 0.5);
+
+
+    for (let i = 0 ; i < 25 ; i++){
+      this.lightbulbs[i].attenuation = 0.04;
+      this.lightbulbs[i].color.setTo(171, 17, 221);
+    };
+    // ======================================================
+  }
+
+
 }

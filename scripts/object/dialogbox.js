@@ -21,7 +21,7 @@ class Dialogbox extends Phaser.Physics.Arcade.Sprite{
     this.on('animationcomplete',function () {
       if(this.anims.currentAnim.key === 'open'){
         this.ndb = scene.add.sprite(x, y, this.whoTalk).setOrigin(0,0).setScrollFactor(0);
-        this.mytxt = scene.add.text(x+175,y+20,this.textToDisplay,{font: "30px visitor", fill:"#FFF"}).setOrigin(0,0).setScrollFactor(0);; // 50 chars per line
+        this.mytxt = scene.add.text(x+175,y+20,this.textToDisplay,{font: "29px visitor", fill:"#D7EFFF"}).setOrigin(0,0).setScrollFactor(0);; // 50 chars per line
       }
     });
 

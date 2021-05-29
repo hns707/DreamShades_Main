@@ -15,8 +15,10 @@ class Player extends Phaser.Physics.Arcade.Sprite{
     // Player Infos
     this.maxHP = 5;
     this.currentHP = this.maxHP;
+    this.crystalCount = 0;
 
     // Player Status
+    this.controlsLocked = false;
     this.isAttackingStill = false;
     this.isAttackingMove = false;
     this.isAttackingJump = false;
@@ -118,41 +120,143 @@ class Player extends Phaser.Physics.Arcade.Sprite{
   }
 
   move(scene,dt){
-    // Debug Pos
-    this.debugText.setText('X: ' + this.x + '\nY: ' + this.y);
-    this.debugText.x = this.x - 30;
-    this.debugText.y = this.y - 70;
-    // ^^^^^^
+
+    if(!this.controlsLocked){
+
+      // Debug Pos
+      this.debugText.setText('X: ' + this.x + '\nY: ' + this.y);
+      this.debugText.x = this.x - 30;
+      this.debugText.y = this.y - 70;
+      // ^^^^^^
 
 
-    //  console.log(this.isAttackingJump);
+      //  console.log(this.isAttackingJump);
 
 
 
 
-    //this.setVelocityX(this.xSpeed);
-    if(this.body.blocked.down){
-      this.isAttackingJump = false;
-      this.haveAttackJump = false;
-      if(this.anims.currentAnim.key === 'walk'){
-        if( this.anims.currentFrame.index == 2 || this.anims.currentFrame.index == 5){
-          this.playRandomFs();
-        }
+      //this.setVelocityX(this.xSpeed);
+      if(this.body.blocked.down){
+        this.isAttackingJump = false;
+        this.haveAttackJump = false;
+        if(this.anims.currentAnim.key === 'walk'){
+          if( this.anims.currentFrame.index == 2 || this.anims.currentFrame.index == 5){
+            this.playRandomFs();
+          }
 
-        this.setVelocityX((this.xSpeed*.1)*this.dirX);
-        this.isGettingKnockback = false;
-      }else{
-
-        if(this.isInvulnerable){
-          this.setVelocityX((this.xSpeed*2)*this.knockbackDirX);
+          this.setVelocityX((this.xSpeed*.1)*this.dirX);
+          if(this.isGettingKnockback){this.isGettingKnockback = false;this.xSpeed = 0;}
         }else{
-          this.setVelocityX((this.xSpeed*2)*this.dirX);
+
+          if(this.isInvulnerable){
+            this.setVelocityX((this.xSpeed*2)*this.knockbackDirX);
+          }else{
+            this.setVelocityX((this.xSpeed*2)*this.dirX);
+          }
+        }
+      }else{
+        //=========================================
+        if(this.isAttackingJump){
+          this.anims.play('jumpattack',true);
+          if(this.anims.currentFrame.index == 3){
+            this.slashSound.play({volume:.5});
+          }
+          if(this.anims.currentFrame.index == 5){
+            var slash = new Slashproj(scene,this.x+(50*this.dirX), this.y+20);
+            setTimeout(function(){slash.slashout()},50);
+          }
+        }
+        //=========================================
+        this.angle = 0;
+        this.isAttackingMove = false;
+      }
+
+      // Invulnerability cooldown
+      if(this.isInvulnerable){
+        if(this.invTimer < 100){this.invTimer++;}
+        else{
+          this.isInvulnerable = false;
+          this.invTimer = 0;
+          this.setAlpha(1);
         }
       }
-    }else{
-      //=========================================
-      if(this.isAttackingJump){
-        this.anims.play('jumpattack',true);
+
+
+
+      if (this.cursors.left.isDown)
+      {
+        if(this.angle > 0){ this.angle = 0;}
+        this.isAttackingStill = false;
+        this.setVelocityX(-200 - this.xSpeed);
+        this.dirX = -1;
+        this.xAccel = true;
+        if (this.angle > -12.5){this.angle -= 0.5;}
+        if(!this.isAttackingJump){
+          if(!this.body.blocked.down && !this.body.blocked.up){this.anims.play('fall');}else{
+            if(this.isAttackingMove && this.body.blocked.down){
+              this.anims.play('moveattack',true);
+              if(this.anims.currentFrame.index == 3){
+                this.slashSound.play({volume:.5});
+              }
+              if(this.anims.currentFrame.index == 5){
+                var slash = new Slashproj(scene,this.x+(50*this.dirX), this.y+20);
+                setTimeout(function(){slash.slashout()},50);
+              }
+            }else{
+              this.anims.play('walk', true);
+            }
+          }
+        }
+        if(!this.flipX){this.flipX = true;}
+        if(this.body.blocked.down){
+          if(this.xSpeed < 150 && this.xAccel){
+            this.xSpeed += 10; //upspeed add is speed increase over frames
+            this.wlk.frameRate = 10 + this.xSpeed * 0.001;
+          }
+
+        }
+
+        //if(this.runKey.isDown){this.setVelocityX(-300);}
+      }
+
+      else if (this.cursors.right.isDown)
+      {
+        if(this.angle < 0){ this.angle = 0;}
+        this.isAttackingStill = false;
+        this.setVelocityX(200 + this.xSpeed);
+        this.dirX = 1;
+        this.xAccel = true;
+        if (this.angle < 12.5){this.angle += 0.5;}
+        if(!this.isAttackingJump){
+          if(!this.body.blocked.down && !this.body.blocked.up){this.anims.play('fall');}else{
+            if(this.isAttackingMove && this.body.blocked.down){
+              this.anims.play('moveattack',true);
+              if(this.anims.currentFrame.index == 3){
+                this.slashSound.play({volume:.5});
+              }
+              if(this.anims.currentFrame.index == 5){
+                var slash = new Slashproj(scene,this.x+(50*this.dirX), this.y+20);
+                setTimeout(function(){slash.slashout()},50);
+              }
+            }else{
+              this.anims.play('walk', true);
+            }
+          }
+        }
+        if(this.flipX){this.flipX = false;}
+        if(this.body.blocked.down){
+          if(this.xSpeed < 150 && this.xAccel){
+            this.xSpeed += 2; //upspeed add is speed increase over frames
+            this.wlk.frameRate = 10 + this.xSpeed * 0.001;
+          }
+
+        }
+
+        //if(this.runKey.isDown){this.setVelocityX(300);}
+      }
+      else if(this.isAttackingStill){
+        this.anims.play('attack',true);
+        this.xSpeed = 0;
         if(this.anims.currentFrame.index == 3){
           this.slashSound.play({volume:.5});
         }
@@ -160,165 +264,69 @@ class Player extends Phaser.Physics.Arcade.Sprite{
           var slash = new Slashproj(scene,this.x+(50*this.dirX), this.y+20);
           setTimeout(function(){slash.slashout()},50);
         }
+        this.setVelocityX(0);
       }
-      //=========================================
-      this.angle = 0;
-      this.isAttackingMove = false;
-    }
-
-    // Invulnerability cooldown
-    if(this.isInvulnerable){
-      if(this.invTimer < 100){this.invTimer++;}
-      else{
-        this.isInvulnerable = false;
-        this.invTimer = 0;
-        this.setAlpha(1);
-      }
-    }
-
-
-
-    if (this.cursors.left.isDown)
-    {
-      if(this.angle > 0){ this.angle = 0;}
-      this.isAttackingStill = false;
-      this.setVelocityX(-200 - this.xSpeed);
-      this.dirX = -1;
-      this.xAccel = true;
-      if (this.angle > -12.5){this.angle -= 0.5;}
-      if(!this.isAttackingJump){
-        if(!this.body.blocked.down && !this.body.blocked.up){this.anims.play('fall');}else{
-          if(this.isAttackingMove && this.body.blocked.down){
-            this.anims.play('moveattack',true);
-            if(this.anims.currentFrame.index == 3){
-              this.slashSound.play({volume:.5});
-            }
-            if(this.anims.currentFrame.index == 5){
-              var slash = new Slashproj(scene,this.x+(50*this.dirX), this.y+20);
-              setTimeout(function(){slash.slashout()},50);
-            }
-          }else{
-            this.anims.play('walk', true);
-          }
-        }
-      }
-      if(!this.flipX){this.flipX = true;}
-      if(this.body.blocked.down){
-        if(this.xSpeed < 150 && this.xAccel){
-          this.xSpeed += 10; //upspeed add is speed increase over frames
-          this.wlk.frameRate = 10 + this.xSpeed * 0.001;
-        }
-
-      }
-
-      //if(this.runKey.isDown){this.setVelocityX(-300);}
-    }
-
-    else if (this.cursors.right.isDown)
-    {
-      if(this.angle < 0){ this.angle = 0;}
-      this.isAttackingStill = false;
-      this.setVelocityX(200 + this.xSpeed);
-      this.dirX = 1;
-      this.xAccel = true;
-      if (this.angle < 12.5){this.angle += 0.5;}
-      if(!this.isAttackingJump){
-        if(!this.body.blocked.down && !this.body.blocked.up){this.anims.play('fall');}else{
-          if(this.isAttackingMove && this.body.blocked.down){
-            this.anims.play('moveattack',true);
-            if(this.anims.currentFrame.index == 3){
-              this.slashSound.play({volume:.5});
-            }
-            if(this.anims.currentFrame.index == 5){
-              var slash = new Slashproj(scene,this.x+(50*this.dirX), this.y+20);
-              setTimeout(function(){slash.slashout()},50);
-            }
-          }else{
-            this.anims.play('walk', true);
-          }
-        }
-      }
-      if(this.flipX){this.flipX = false;}
-      if(this.body.blocked.down){
-        if(this.xSpeed < 150 && this.xAccel){
-          this.xSpeed += 2; //upspeed add is speed increase over frames
-          this.wlk.frameRate = 10 + this.xSpeed * 0.001;
-        }
-
-      }
-
-      //if(this.runKey.isDown){this.setVelocityX(300);}
-    }
-    else if(this.isAttackingStill){
-      this.anims.play('attack',true);
-      this.xSpeed = 0;
-      if(this.anims.currentFrame.index == 3){
-        this.slashSound.play({volume:.5});
-      }
-      if(this.anims.currentFrame.index == 5){
-        var slash = new Slashproj(scene,this.x+(50*this.dirX), this.y+20);
-        setTimeout(function(){slash.slashout()},50);
-      }
-      this.setVelocityX(0);
-    }
-    else
-    {
-      this.angle = 0;
-      this.xAccel = false;
-      this.isAttackingMove = false;
-      if(this.xSpeed > 0){
-        this.xSpeed -= 10; //upspeed add is speed increase over frames
-      }else if(this.xSpeed < 0){this.xSpeed = 0;this.isGettingKnockback = false;}
-      //this.setVelocityX(0);
-      if(!this.isAttackingJump){
-        if(!this.body.blocked.down && !this.body.blocked.up){this.anims.play('fall');}else{this.anims.play('idle', true);this.wlk.frameRate = 10;  } }
-      }
-
-      // ATTACK
-      if (this.spKey.isDown){
-        if(!this.cursors.right.isDown && !this.cursors.left.isDown && !this.isAttackingStill && this.body.blocked.down){
-          this.isAttackingStill = true;
-        }
-        // ATTACK /W MOVE
-        else if (!this.isAttackingMove && this.cursors.right.isDown || this.cursors.left.isDown && this.body.blocked.down){
-          this.isAttackingMove = true;
-        }
-
-        if(!this.body.blocked.down && !this.isAttackingJump && !this.haveAttackJump){
-          this.isAttackingJump = true;
-          this.haveAttackJump = true;
-        }
-
-      }
-
-
-      if (this.cursors.up.isDown)
+      else
       {
+        this.angle = 0;
+        this.xAccel = false;
+        this.isAttackingMove = false;
+        if(this.xSpeed > 0){
+          this.xSpeed -= 10; //upspeed add is speed increase over frames
+        }else if(this.xSpeed < 0){this.xSpeed = 0;this.isGettingKnockback = false;}
+        //this.setVelocityX(0);
+        if(!this.isAttackingJump){
+          if(!this.body.blocked.down && !this.body.blocked.up){this.anims.play('fall');}else{this.anims.play('idle', true);this.wlk.frameRate = 10;  } }
+        }
 
-        if(this.body.blocked.down && !this.cursors.down.isDown)
+        // ATTACK
+        if (this.spKey.isDown){
+          if(!this.cursors.right.isDown && !this.cursors.left.isDown && !this.isAttackingStill && this.body.blocked.down){
+            this.isAttackingStill = true;
+          }
+          // ATTACK /W MOVE
+          else if (!this.isAttackingMove && this.cursors.right.isDown || this.cursors.left.isDown && this.body.blocked.down){
+            this.isAttackingMove = true;
+          }
+
+          if(!this.body.blocked.down && !this.isAttackingJump && !this.haveAttackJump){
+            this.isAttackingJump = true;
+            this.haveAttackJump = true;
+          }
+
+        }
+
+
+        if (this.cursors.up.isDown)
         {
-          this.setVelocityY(-200);
-          this.upAccel = true;
+
+          if(this.body.blocked.down && !this.cursors.down.isDown)
+          {
+            this.setVelocityY(-200);
+            this.upAccel = true;
+            this.upSpeed = 0;
+          }
+          if(this.body.velocity.y < -1 && this.upSpeed < 5 && this.upAccel){ //upspeed cond is maxspeed
+            this.upSpeed += .3; //upspeed add is speed increase over frames
+            this.setVelocityY(-300 -((Math.sin(dt)*(-this.upSpeed))+this.upSpeed));
+            this.angle = 0;
+            if(!this.isAttackingJump){this.anims.play('jump');}
+          }
+        }else{
+          this.upAccel = false;
           this.upSpeed = 0;
         }
-        if(this.body.velocity.y < -1 && this.upSpeed < 5 && this.upAccel){ //upspeed cond is maxspeed
-          this.upSpeed += .3; //upspeed add is speed increase over frames
-          this.setVelocityY(-300 -((Math.sin(dt)*(-this.upSpeed))+this.upSpeed));
-          this.angle = 0;
-          if(!this.isAttackingJump){this.anims.play('jump');}
-        }
-      }else{
-        this.upAccel = false;
-        this.upSpeed = 0;
+
+
+
+        //console.log(this.dirX)
+
+        // Prevent Wallcliping with speed
+        this.body.velocity.y = Math.min(800, Math.max(-800,this.body.velocity.y));
+        this.body.velocity.x = Math.min(800, Math.max(-800,this.body.velocity.x));
+      }else{// controls locked
+        this.resetPlayerMovements();
       }
-
-
-
-      //console.log(this.dirX)
-
-      // Prevent Wallcliping with fallspeed
-      this.body.velocity.y = Math.min(800, Math.max(-800,this.body.velocity.y));
-
     }
 
     // Fancy Checkers
@@ -353,6 +361,21 @@ class Player extends Phaser.Physics.Arcade.Sprite{
         }
       }
       //===========================================================
+    }
+
+    resetPlayerMovements(){
+      this.anims.play('idle',true);
+      this.setVelocityX(0);
+      this.angle = 0;
+      this.upAccel = false;
+      this.xAccel = false;
+      this.upSpeed = 0;
+      this.xSpeed = 0;
+      this.isAttackingStill = false;
+      this.isAttackingMove = false;
+      this.isAttackingJump = false;
+      this.haveAttackJump = false;
+      this.isGettingKnockback = false;
     }
 
     playRandomFs(){

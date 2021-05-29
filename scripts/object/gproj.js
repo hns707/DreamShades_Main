@@ -11,6 +11,10 @@ class Gproj extends Phaser.Physics.Arcade.Sprite{
 
     }
 
+    setFlip(isFlip){
+      this.flipX = isFlip;
+    }
+
     projOut(){
       this.destroy();
     }

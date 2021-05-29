@@ -8,7 +8,7 @@ class Gunner extends Phaser.Physics.Arcade.Sprite{
     scene.physics.add.overlap(scene.player, this, function(){scene.player.getHit(this.x);});
 
     this.setBodySize(this.body.width-15,this.body.height-9);
-    this.setGravityY(5000)
+    this.setGravityY(5000);
     this.world = scene;
     this.scale = 3;
     this.isAlive = true;
@@ -106,6 +106,7 @@ class Gunner extends Phaser.Physics.Arcade.Sprite{
         if (this.world.player.y > this.y - 200 && this.world.player.y < this.y + 100){
           this.shotSound.play({volume:.5});
           let bullet = new Gproj(this.world,this.x, this.y-15,'bullet').setVelocityX(250*this.dir);
+          if(this.dir == 1){bullet.setFlip(true);}
       		this.world.physics.add.collider(bullet, this.world.platforms, function(){bullet.projOut();}, null, this.world);
         }
       }
