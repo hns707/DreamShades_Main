@@ -25,6 +25,12 @@ class Bossdoor extends Phaser.Physics.Arcade.Sprite{
       frameRate: 10
     });
 
+    this.anims.create({
+      key: 'doorOpen',
+      frames: this.anims.generateFrameNumbers('bossdoor', { start: 14, end: 18 }),
+      frameRate: 10
+    });
+
     this.crystalIn = scene.sound.add('crystalIn');
     this.flameOn = scene.sound.add('flameon');
 
@@ -40,10 +46,19 @@ class Bossdoor extends Phaser.Physics.Arcade.Sprite{
       if(this.anims.currentAnim.key === 'eyeGlow'){
         if(!this.endOnce){
           this.flameOn.play({volume:.5})
-          scene.setPlayerLock(false);
           this.endOnce = true;
-        }
+          let anim = this.anims;
+          setTimeout(function(){anim.play('doorOpen',true);},1500);
 
+        }
+      }
+    });
+
+    this.on('animationcomplete',function () {
+      if(this.anims.currentAnim.key === 'doorOpen'){
+        scene.setPlayerLock(false);
+        scene.player.textInteract.setText('Press [SPACEBAR] to enter');
+        scene.player.dtiEnabled = true;
       }
     });
 

@@ -17,6 +17,8 @@ class Player extends Phaser.Physics.Arcade.Sprite{
     this.currentHP = this.maxHP;
     this.crystalCount = 0;
 
+    this.dtiEnabled = false;
+
     // Player Status
     this.controlsLocked = false;
     this.isAttackingStill = false;
@@ -40,7 +42,9 @@ class Player extends Phaser.Physics.Arcade.Sprite{
     this.xSpeed = 0;
 
 
-    this.debugText = scene.add.text(this.x, this.y, 'XY')
+    //this.debugText = scene.add.text(this.x, this.y, 'XY')
+
+    this.textInteract = scene.add.text(this.x, this.y, '');
 
 
     this.wlk = this.anims.create({
@@ -103,6 +107,7 @@ class Player extends Phaser.Physics.Arcade.Sprite{
     this.cursors = scene.input.keyboard.createCursorKeys();
     this.runKey = scene.input.keyboard.addKey('SHIFT'); // Run
     this.spKey = scene.input.keyboard.addKey('H'); // Special
+    this.interactKey = scene.input.keyboard.addKey('SPACE'); // Special
 
     this.slashSound = scene.sound.add('sw');
     this.hitSound = scene.sound.add('phit');
@@ -124,10 +129,15 @@ class Player extends Phaser.Physics.Arcade.Sprite{
     if(!this.controlsLocked){
 
       // Debug Pos
-      this.debugText.setText('X: ' + this.x + '\nY: ' + this.y);
-      this.debugText.x = this.x - 30;
-      this.debugText.y = this.y - 70;
+      //this.debugText.setText('X: ' + this.x + '\nY: ' + this.y);
+      //this.debugText.x = this.x - 30;
+      //this.debugText.y = this.y - 70;
       // ^^^^^^
+
+      if(this.dtiEnabled){
+        this.textInteract.x = this.x - 110;
+        this.textInteract.y = this.y - 70;
+      }
 
 
       //  console.log(this.isAttackingJump);

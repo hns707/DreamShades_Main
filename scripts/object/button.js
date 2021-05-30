@@ -39,11 +39,15 @@ class Button extends Phaser.Physics.Arcade.Sprite{
     }
   }
 
-  action(i,obj){
+  action(i,obj,arg){
     this.doEffect = false;
 
-    if(i==0){
-      obj.show();
+    switch (i) {
+      case 0: obj.show(); break;
+      case 1: obj.enable(arg); break;
+
+      default: console.log('Button error: Wrong ID');
+
     }
 
     //console.log('do once');

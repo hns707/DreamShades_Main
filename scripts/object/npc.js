@@ -12,6 +12,8 @@ class Npc extends Phaser.Physics.Arcade.Sprite{
     this.isDoor = false;
     this.whoTalk = 'nashdb';
     this.textToDisplay = "npcempty";
+    this.multDials = false;
+    this.nextNpc = null;
 
 
   }
@@ -45,8 +47,10 @@ class Npc extends Phaser.Physics.Arcade.Sprite{
         this.isEnabled = false;
         let sc = this.world;
         let idr = this.isDoor;
+        let imd = this.multDials;
+        let npc = this.nextNpc;
         this.world.player.controlsLocked = true;
-        this.world.time.delayedCall(this.cinematicTime, function(){sc.outOfCinematic(idr);}, null, sc);
+        this.world.time.delayedCall(this.cinematicTime, function(){sc.outOfCinematic(idr,imd,npc);}, null, sc);
       }
       this.world.dialbox = new Dialogbox(this.world, 100, 450, 'opendialog');
       this.world.dialbox.textToDisplay = this.textToDisplay;
@@ -59,11 +63,18 @@ class Npc extends Phaser.Physics.Arcade.Sprite{
     }
   }
 
-  setText(c,text,isCine,cineTime, door){
+  setText(c,text,isCine,cineTime, door, multipleDials, newNpc){
     this.whoTalk = c;
     this.textToDisplay = text;
     this.isCinematic = isCine;
-    if(isCine){this.cinematicTime = cineTime; this.isDoor = door;}
+    if(isCine){
+      this.cinematicTime = cineTime;
+      this.isDoor = door;
+      if(multipleDials){
+        this.multDials = true;
+        this.nextNpc = newNpc;
+      }
+    }
   }
 
 

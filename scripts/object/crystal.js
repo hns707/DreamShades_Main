@@ -16,6 +16,8 @@ class Crystal extends Phaser.Physics.Arcade.Sprite{
     this.clight.attenuation = 0.04;
     this.clight.color.setTo(171, 17, 221);
 
+    this.cGet = scene.sound.add('crystalGet');
+
   }
 
   pickUp(){
@@ -29,7 +31,7 @@ class Crystal extends Phaser.Physics.Arcade.Sprite{
     this.world.crystalLight[this.world.player.crystalCount].color.setTo(171, 17, 221);
     this.world.player.crystalCount++;
     // =====================
-
+    this.cGet.play({volume:.5});
     // Destroy object
     this.clight.destroy();
     this.destroy();
@@ -46,7 +48,7 @@ class Crystal extends Phaser.Physics.Arcade.Sprite{
       let sc = this.world;
       this.world.time.delayedCall(3000, function(){sc.outOfCinematic(false)}, null, sc);
 
-      this.world.doorDB.setText('shelldb',"[Stell] :\nLook like I have them all, let put them in.",true,3000,true);
+      this.world.doorDialog.setText('shelldb',"[Stell] :\nLook like I have them all, let put them in.",true,3000,true,false);
 
     }
 
