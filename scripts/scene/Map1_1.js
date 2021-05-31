@@ -27,7 +27,7 @@ class Map1_1 extends Phaser.Scene {
 
     // Background & Effects
     this.load.image('blank', 'assets/blank.png');
-    this.load.image('map1-bg', 'assets/map1/map1_bg.jpeg');
+    this.load.image('map1-bg', 'assets/map1/map1bg.jpg');
     this.load.image('fog', 'assets/map1/loopfog.png');
     this.load.image('vignette', 'assets/vignette.png');
 
@@ -364,8 +364,13 @@ class Map1_1 extends Phaser.Scene {
     this.lightbulbs[31] = this.add.pointlight(4700, 1220, 0, 50, 0.5);
     this.lightbulbs[32] = this.add.pointlight(4625, 1120, 0, 50, 0.5);
 
+    this.lightbulbs[33] = this.add.pointlight(192, 225, 0, 50, 0.5);
+    this.lightbulbs[34] = this.add.pointlight(410, 340, 0, 50, 0.5);
+    this.lightbulbs[35] = this.add.pointlight(420, 490, 0, 50, 0.5);
+    this.lightbulbs[36] = this.add.pointlight(220, 560, 0, 50, 0.5);
 
-    for (let i = 0 ; i < 33 ; i++){
+
+    for (let i = 0 ; i < 37 ; i++){
       this.lightbulbs[i].attenuation = 0.04;
       this.lightbulbs[i].color.setTo(171, 17, 221);
     };
