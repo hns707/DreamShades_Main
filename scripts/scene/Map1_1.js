@@ -54,6 +54,7 @@ class Map1_1 extends Phaser.Scene {
     this.load.spritesheet('shell', 'assets/shell2.png', { frameWidth: 128, frameHeight: 64 } );
     this.load.spritesheet('crawler', 'assets/crawler2.png', { frameWidth: 32, frameHeight: 32 } );
     this.load.spritesheet('gunner', 'assets/gunnermonkb.png', { frameWidth: 32, frameHeight: 32 } );
+    this.load.spritesheet('skuller', 'assets/skuller2.png', { frameWidth: 32, frameHeight: 32 } );
     this.load.spritesheet('expl', 'assets/explosion_monster2.png', { frameWidth: 32, frameHeight: 32 } );
     this.load.spritesheet('bossdoor', 'assets/map1/boss_door.png', { frameWidth: 128, frameHeight: 128 } );
 
@@ -111,7 +112,7 @@ class Map1_1 extends Phaser.Scene {
 
     //NPC Test
     this.firstCrystalDialog = new Npc(this,700,2884,'mark').setAlpha(0);
-    this.firstCrystalDialog.setText('shelldb',"[Stell] :\nThis crystal have a strange energy around it.\nI feel a connection between it and this place, it\nmight be a good idea to take it.",true,6000,false,false);
+    this.firstCrystalDialog.setText('shelldb',"[Stell] :\nThis crystal have a strange energy around it.\nI feel a connection between it and this place, it\nmight be a good idea to take it.",true,1,false,false);
 
     this.doorDialog = new Npc(this,4595,2370,'mark').setAlpha(0);
     this.doorDialog.setText('shelldb',"[Stell] :\nThis door seems sealed.\nMaybe if I find enough of these crystals shards\nto fill all the slots..",false);
@@ -168,6 +169,19 @@ class Map1_1 extends Phaser.Scene {
       this.physics.add.collider(monster, this.platforms);
       this.physics.add.collider(monster, this.mwalls);
     });
+
+    // Skuller spawn
+    this.skullerContainer=this.add.container();
+    this.skullersObjects = this.map.getObjectLayer('skuller')['objects'];
+    this.skullersObjects.forEach(monsterObject => {
+      let monster=new Gunner(this,monsterObject.x+100,monsterObject.y);
+      this.skullerContainer.add(monster);
+      this.physics.add.collider(monster, this.platforms);
+      this.physics.add.collider(monster, this.mwalls);
+    });
+
+    this.physics.add.collider(this.testSkuller, this.platforms);
+    this.physics.add.collider(this.testSkuller, this.mwalls);
 
 
     this.fog = this.add.tileSprite(0,0, this.map.widthInPixels+64, this.map.heightInPixels+64, "fog").setOrigin(0,0).setAlpha(0.2);
@@ -269,6 +283,8 @@ class Map1_1 extends Phaser.Scene {
     // Everyone does their own things
     this.crawlerContainer.each(function (child) {child.upd();});
     this.gunnerContainer.each(function (child) {child.upd();});
+    this.skullerContainer.each(function (child) {child.upd();});
+
 
     //this.iNext.upd(delta);
     this.crystalBox.forEach(crstl => {crstl.upd(delta)});
