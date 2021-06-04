@@ -23,6 +23,9 @@ class Slashproj extends Phaser.Physics.Arcade.Sprite{
     }
 
 
+    if(scene.boss){scene.physics.add.overlap(scene.boss, this, function(){scene.boss.getHit()}, null, scene);}
+
+
     this.scale = 3;
     this.body.allowGravity = false;
     this.world = scene;

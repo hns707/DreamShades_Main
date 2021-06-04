@@ -69,6 +69,7 @@ class Crawler extends Phaser.Physics.Arcade.Sprite{
     if(this.isGettingHit){
       if(this.hitTimer > 10){
         this.isGettingHit = false;
+        this.hitTimer = 0;
         this.setVelocity(10*this.knockbackDirX,0);
 
       }else{

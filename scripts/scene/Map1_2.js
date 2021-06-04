@@ -8,7 +8,6 @@ class Map1_2 extends Phaser.Scene {
   {
     // SFX
     this.load.audio('shot', [ 'assets/audio/shot.ogg', 'assets/audio/shot.mp3' ]);
-    this.load.audio('stomp', [ 'assets/audio/bstomp.ogg', 'assets/audio/bstomp.mp3' ]);
     this.load.audio('splash', [ 'assets/audio/splash.ogg', 'assets/audio/splash.mp3' ]);
     this.load.audio('sw', [ 'assets/audio/swing.ogg', 'assets/audio/swing.mp3' ]);
     this.load.audio('ehit', [ 'assets/audio/hit_organic.ogg', 'assets/audio/hit_organic.mp3' ]);
@@ -16,8 +15,7 @@ class Map1_2 extends Phaser.Scene {
     this.load.audio('bend', [ 'assets/audio/button_end.ogg', 'assets/audio/button_end.mp3' ]);
     this.load.audio('bgm', [ 'assets/audio/crystal-exploration1.ogg', 'assets/audio/crystal-exploration1.mp3' ]);
     this.load.audio('bgm2', [ 'assets/audio/crystal-battle1-loop.ogg', 'assets/audio/crystal-battle1-loop.mp3' ]);
-    this.load.audio('crystalIn', [ 'assets/audio/crystal_set.ogg', 'assets/audio/crystal_set.mp3' ]);
-    this.load.audio('flameon', [ 'assets/audio/flames_on.ogg', 'assets/audio/flames_on.mp3' ]);
+    this.load.audio('laser', [ 'assets/audio/bosslaser.ogg', 'assets/audio/bosslaser.mp3' ]);
 
     this.load.audio('f1', [ 'assets/audio/footsteps/f1.ogg', 'assets/audio/footsteps/f1.mp3' ]);
     this.load.audio('f2', [ 'assets/audio/footsteps/f2.ogg', 'assets/audio/footsteps/f2.mp3' ]);
@@ -36,6 +34,9 @@ class Map1_2 extends Phaser.Scene {
     this.load.image('button', 'assets/map1/button.png');
     this.load.image('trigpf', 'assets/map1/triggered_platform.png');
     this.load.image('pillar', 'assets/map1/pillar.png');
+    this.load.image('bossdart', 'assets/bossbullet.png');
+
+    this.load.image('altarshard', 'assets/altar_shard.png');
 
     //HUD
     this.load.image('heart', 'assets/heart.png');
@@ -50,8 +51,9 @@ class Map1_2 extends Phaser.Scene {
     // Spritesheets
     this.load.spritesheet('shell', 'assets/shell2.png', { frameWidth: 128, frameHeight: 64 } );
     this.load.spritesheet('expl', 'assets/explosion_monster2.png', { frameWidth: 32, frameHeight: 32 } );
-    this.load.spritesheet('bossjs', 'assets/map1/boss1sprite.png', { frameWidth: 256, frameHeight: 256 } );
+    this.load.spritesheet('bossjs', 'assets/map1/boss1.png', { frameWidth: 256, frameHeight: 256 } );
     this.load.spritesheet('bossjshp', 'assets/map1/bossjshp.png', { frameWidth: 128, frameHeight: 16 } );
+    this.load.spritesheet('bosslaser', 'assets/bosslaser.png', { frameWidth: 16, frameHeight: 64 } );
 
     this.load.spritesheet('opendialog', 'assets/opendial2.png',{frameWidth: 1000, frameHeight: 160 });
 
@@ -63,6 +65,11 @@ class Map1_2 extends Phaser.Scene {
   create(){
 
     this.onceZoomOut = false;
+    this.battleStarted = false;
+
+
+    this.skipKey = this.input.keyboard.addKey('SPACE'); // Skipping dials
+    this.onceFade = false;
 
 
     this.bgm2 = this.sound.add('bgm2');
@@ -77,6 +84,14 @@ class Map1_2 extends Phaser.Scene {
     this.pillar.setVertical();
     this.pillar2.setVertical();
 
+
+    // Boss battle related content :
+    this.bossPillar = [];
+    this.bossPillar[0] = new Pillar(this,2222,1900, 'pillar');
+    this.bossPillar[1] = new Pillar(this,2706,1900, 'pillar');
+
+    this.altar = this.add.sprite(2470, 1100,'altarshard'); // y: 964
+    this.onceAltar = false;
 
 
     // Tilemap
@@ -97,7 +112,7 @@ class Map1_2 extends Phaser.Scene {
 
 
     // Player
-    this.player=new Player(this,150,1028,'shell'); // 150 / 2850 || Default
+    this.player=new Player(this,150,1028,'shell'); // 150 / 1028 || Default
     this.physics.add.collider(this.player, this.platforms);
     this.physics.add.collider(this.player, this.btn);
     this.physics.add.collider(this.player, this.pillar);
@@ -112,19 +127,33 @@ class Map1_2 extends Phaser.Scene {
       this.bossDialogs[i].isEnabled = false;
     };
 
-    this.bossDialogs[0].setText('bossjsdb',"[???] :\nOhohohohohoh.",true,4000,false,true,this.bossDialogs[1]);
+    this.bossDialogs[0].setText('bossjsdb',"[???] :\nOhohohohohoh.",true,3000,false,true,this.bossDialogs[1]);
     this.bossDialogs[1].setText('bossjsdb',"[???] :\nYou aren't from this place, maybe from the other\nside of the light wall. Ohohohoh.",true,6000,false,true,this.bossDialogs[2]);
-    this.bossDialogs[2].setText('bossjsdb',"[Joyous Sadness] :\nI'm the keeper of the [Shard of Happiness], I'm\nJoyous Sadness, what bring you here?",true,6000,false,true,this.bossDialogs[3]);
-    this.bossDialogs[3].setText('shelldb',"[Stell] :\nI'm here for the shard, to reclaim what Exterro\nstole from the Dream Realm.",true,6000,false,true,this.bossDialogs[4]);
-    this.bossDialogs[4].setText('bossjsdb',"[Joyous Sadness] :\nOhohohoh, you think our Lord Exterro would give\nme this shard he stole just to hand it to you?.",true,6000,false,true,this.bossDialogs[5]);
-    this.bossDialogs[5].setText('shelldb',"[Stell] :\nThen, i'll take it by force.",true,3000,false,false);
+    this.bossDialogs[2].setText('bossjsdb',"[Joyous Sadness] :\nI'm the keeper of the Shard of Happiness, I'm\nJoyous Sadness, what bring you here?",true,6000,false,true,this.bossDialogs[3]);
+    this.bossDialogs[3].setText('shelldb',"[Stell] :\nI'm here to take shard, to reclaim what Exterro\nstole from the Dream Realm.",true,6000,false,true,this.bossDialogs[4]);
+    this.bossDialogs[4].setText('bossjsdb',"[Joyous Sadness] :\nOhohohoh, you think our Lord Exterro would give\nme the shard he stole just to hand it to you?",true,6000,false,true,this.bossDialogs[5]);
+    this.bossDialogs[5].setText('shelldb',"[Stell] :\nThen, i'll take it by force.",true,4000,false,false);
 
-
+    //this.testLaser = new Bosslaser(this,1900,830,'bosslaser');
+    //this.testLaser.setHorizontal();
+    //this.testLaser.scale = 15;
 
 
     // Boss
-    this.boss = new Boss_JoyousSadness(this,2920,600,'bossjs');
+    this.boss = new Boss_JoyousSadness(this,2940,780,'bossjs');
     this.physics.add.collider(this.boss, this.platforms);
+
+
+
+
+    this.bossPillar.forEach(pillar => {
+      pillar.scale = 4;
+      pillar.setVertical();
+      pillar.moveSpeed = 10;
+      pillar.moveDistance = 1000;
+      this.physics.add.collider(this.player, pillar);
+    });
+
 
 
     this.fog = this.add.tileSprite(0,0, this.map.widthInPixels+64, this.map.heightInPixels+64, "fog").setOrigin(0,0).setAlpha(0.2);
@@ -170,6 +199,7 @@ class Map1_2 extends Phaser.Scene {
 
     // Player moves
     this.player.move(this,delta);
+    this.boss.upd();
 
     this.btn.press(); if(this.btn.doEffect){this.btn.action(1,this.pillar,'right');}
     //Za pillar
@@ -184,7 +214,21 @@ class Map1_2 extends Phaser.Scene {
     if(this.bossDialogs[2].isEnabled){this.bossDialogs[2].playerQuery();}
     if(this.bossDialogs[3].isEnabled){this.bossDialogs[3].playerQuery();}
     if(this.bossDialogs[4].isEnabled){this.bossDialogs[4].playerQuery();}
-    if(this.bossDialogs[5].isEnabled){this.bossDialogs[5].playerQuery(); this.time.delayedCall(4000, function(){this.showBossHp();}, null, this);}
+    if(this.bossDialogs[5].isEnabled){this.bossDialogs[5].playerQuery(); this.time.delayedCall(4000, function(){this.showBossHp();this.battleStarted = true;}, null, this);}
+    if(this.bossDialogs[6]){if(this.bossDialogs[6].isEnabled){this.bossDialogs[6].playerQuery();}}
+    if(this.bossDialogs[7]){if(this.bossDialogs[7].isEnabled){this.bossDialogs[7].playerQuery();}}
+    if(this.bossDialogs[8]){if(this.bossDialogs[8].isEnabled){this.bossDialogs[8].playerQuery();}}
+    if(this.bossDialogs[9]){if(this.bossDialogs[9].isEnabled){this.bossDialogs[9].playerQuery();}}
+
+    this.wantToSkipDialogs(this.skipKey.isDown);
+
+    this.endFadeOut(this.skipKey.isDown);
+
+    this.showAltar(this.boss.isOver);
+
+
+
+
 
 
     if(this.onceZoomOut){
@@ -194,18 +238,66 @@ class Map1_2 extends Phaser.Scene {
     // Parralax
     this.fog.tilePositionX += .2;
 
-    // restart on fall
-    //if(this.player.isBelow(this.map.heightInPixels+50)){this.restart();}
+    // Boss battle related content :
+    if(this.battleStarted){
+      let boss = this.boss;
+      this.bossPillar[0].enable('left');
+      this.bossPillar[0].retract();
+      this.bossPillar[1].enable('left');
+      this.bossPillar[1].retract();
+      this.time.delayedCall(2000, function(){boss.isPhase1 = true;}, null, this);
+    }
 
   }
 
-  restart(){this.bgm.stop();this.scene.start("map1_2");}
+  restart(){this.bgm2.stop();this.scene.start("map1_2");}
 
   outOfCinematic(isDoor,isMultiDials,nextnpc){ // After dial only
     this.dialbox.call();
     this.setPlayerLock(false);
     if(isDoor){this.door.playAnimation();}
     if(isMultiDials){nextnpc.isEnabled = true;}
+  }
+
+  wantToSkipDialogs(isSkip){
+    if(isSkip){
+      this.bossDialogs.forEach(dial => {
+        dial.cinematicTimeMultiplier = 0.2;
+      });
+    } else {
+      this.bossDialogs.forEach(dial => {
+        dial.cinematicTimeMultiplier = 1;
+      });
+    }
+  }
+
+  showAltar(bool){
+    if(bool){
+      let al = this.altar;
+      if(al.y > 964){
+        al.setPosition(al.x,al.y - 1);
+      }else{
+        if(!this.onceAltar){
+          this.onceAltar = true;
+          this.bossDialogs[9] = new Npc(this,al.x,al.y,'mark').setAlpha(0);
+          this.bossDialogs[9].setText('shelldb',"[Stell] :\nFinally..",true,3000,false,false);
+        }
+      }
+    }
+  }
+
+  endFadeOut(bool){
+    if(bool){
+      if(this.onceAltar){
+        if(!this.onceFade){
+          this.onceFade = true;
+          this.cameras.main.fadeOut(1000, 0, 0, 0)
+          this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, (cam, effect) => {
+            this.scene.start("bootGame");
+          });
+        }
+      }
+    }
   }
 
   showBossHp(){
@@ -242,12 +334,12 @@ class Map1_2 extends Phaser.Scene {
     if(this.player.x > 1700 && !this.onceZoomOut){
       let cam = this.cameras.main;
       this.tweens.add({
-          targets: cam,
-          zoom :{
-            from: 1,
-            to:0.8
-          },
-          duration: 3000
+        targets: cam,
+        zoom :{
+          from: 1,
+          to:0.8
+        },
+        duration: 3000
       });
       // VIGNETTE
       let v = this.vignette

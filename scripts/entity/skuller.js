@@ -9,6 +9,7 @@ class Skuller extends Phaser.Physics.Arcade.Sprite{
 
     this.setBodySize(this.body.width-15,this.body.height);
     this.setOffset(5, 0);
+    this.setGravityY(5000);
     this.world = scene;
     this.scale = 3;
     this.isAlive = true;
@@ -23,18 +24,18 @@ class Skuller extends Phaser.Physics.Arcade.Sprite{
     this.isTriggered = false;
     this.isTracking = false;
     this.isOut = false;
-    this.once = false;
+    this.queryOnce = false;
 
     this.anims.create({
       key: 'wakeup',
       frames: this.anims.generateFrameNumbers('skuller', { start: 0, end: 12 }),
-      frameRate: 5
+      frameRate: 10
     });
 
     this.anims.create({
       key: 'getdown',
       frames: this.anims.generateFrameNumbers('skuller', { start: 21, end: 33 }),
-      frameRate: 5
+      frameRate: 10
     });
 
     this.anims.create({
@@ -92,7 +93,7 @@ class Skuller extends Phaser.Physics.Arcade.Sprite{
         if (this.x < this.world.player.x){this.flipX = true; this.dir = 1;}
         else{this.flipX = false; this.dir = -1;}
         this.anims.play('move', true);
-        this.setVelocity(25*this.dir,0)
+        if(!this.isGettingHit){this.setVelocity(50*this.dir,200);}
 
 
       } else {
@@ -104,8 +105,9 @@ class Skuller extends Phaser.Physics.Arcade.Sprite{
       } // Wakeup before track
 
       if(this.isGettingHit){
-        if(this.hitTimer > 10){
+        if(this.hitTimer > 15){
           this.isGettingHit = false;
+          this.hitTimer = 0;
           this.setVelocity(10*this.knockbackDirX,0);
 
         }else{
@@ -134,7 +136,7 @@ class Skuller extends Phaser.Physics.Arcade.Sprite{
         this.currentHP -=1;
       }
       this.setVelocityX(300*this.knockbackDirX);
-      this.setVelocityY(-300);
+      this.setVelocityY(-50);
 
       if(this.currentHP==0){
         this.setDeath();
@@ -147,19 +149,19 @@ class Skuller extends Phaser.Physics.Arcade.Sprite{
 
     //Player in range
 
-    if (this.world.player.x > this.x - 200 && this.world.player.x < this.x + 200){
-      if (this.world.player.y > this.y - 50 && this.world.player.y < this.y + 50){
+    if (this.world.player.x > this.x - 400 && this.world.player.x < this.x + 400){
+      if (this.world.player.y > this.y - 100 && this.world.player.y < this.y + 100){
 
         this.isTriggered = true;
-        this.once = false;
+        this.queryOnce = false;
 
       }
 
     }else{
       if(this.isTriggered){
-        if(!this.once){
+        if(!this.queryOnce){
 
-          this.once = true;
+          this.queryOnce = true;
           this.isOut = true;
           this.isTracking = false;
           this.setVelocity(0,0)

@@ -49,12 +49,15 @@ class Map1_1 extends Phaser.Scene {
     this.load.image('mark', 'assets/mark.png');
     this.load.image('nashdb', 'assets/nashdialog.png');
     this.load.image('shelldb', 'assets/shelldialog.png');
+    this.load.image('nodb', 'assets/unknowndialog.png');
+
+
 
     // Spritesheets
     this.load.spritesheet('shell', 'assets/shell2.png', { frameWidth: 128, frameHeight: 64 } );
     this.load.spritesheet('crawler', 'assets/crawler2.png', { frameWidth: 32, frameHeight: 32 } );
     this.load.spritesheet('gunner', 'assets/gunnermonkb.png', { frameWidth: 32, frameHeight: 32 } );
-    this.load.spritesheet('skuller', 'assets/skuller2.png', { frameWidth: 32, frameHeight: 32 } );
+    this.load.spritesheet('skuller', 'assets/skuller.png', { frameWidth: 32, frameHeight: 32 } );
     this.load.spritesheet('expl', 'assets/explosion_monster2.png', { frameWidth: 32, frameHeight: 32 } );
     this.load.spritesheet('bossdoor', 'assets/map1/boss_door.png', { frameWidth: 128, frameHeight: 128 } );
 
@@ -62,7 +65,7 @@ class Map1_1 extends Phaser.Scene {
 
     // Map & Tileset
     this.load.image('map1_ts', 'assets/map1/tiles.png');
-    this.load.tilemapTiledJSON('map1', 'assets/map1/map1_m.json');
+    this.load.tilemapTiledJSON('map1', 'assets/map1/map1_n.json');
   }
 
   create(){
@@ -110,9 +113,13 @@ class Map1_1 extends Phaser.Scene {
 
 
 
-    //NPC Test
+    //NPC
+    this.controlsDialog = new Npc(this,150,2884,'mark').setAlpha(0);
+    this.controlsDialog.setText('nodb',"[Controls] :\nUse the ARROWS keys to move and jump.\nUse SHIFT to attack.\nTo reach higher and farer platforms, keep the\narrow key down to gather speed.",false);
+
+
     this.firstCrystalDialog = new Npc(this,700,2884,'mark').setAlpha(0);
-    this.firstCrystalDialog.setText('shelldb',"[Stell] :\nThis crystal have a strange energy around it.\nI feel a connection between it and this place, it\nmight be a good idea to take it.",true,1,false,false);
+    this.firstCrystalDialog.setText('shelldb',"[Stell] :\nThis crystal have a strange energy around it.\nI feel a connection between it and this place, it\nmight be a good idea to take it.",true,6000,false,false);
 
     this.doorDialog = new Npc(this,4595,2370,'mark').setAlpha(0);
     this.doorDialog.setText('shelldb',"[Stell] :\nThis door seems sealed.\nMaybe if I find enough of these crystals shards\nto fill all the slots..",false);
@@ -172,16 +179,14 @@ class Map1_1 extends Phaser.Scene {
 
     // Skuller spawn
     this.skullerContainer=this.add.container();
-    this.skullersObjects = this.map.getObjectLayer('skuller')['objects'];
+    this.skullersObjects = this.map.getObjectLayer('skullers')['objects'];
     this.skullersObjects.forEach(monsterObject => {
-      let monster=new Gunner(this,monsterObject.x+100,monsterObject.y);
+      let monster=new Skuller(this,monsterObject.x+100,monsterObject.y);
       this.skullerContainer.add(monster);
       this.physics.add.collider(monster, this.platforms);
       this.physics.add.collider(monster, this.mwalls);
     });
 
-    this.physics.add.collider(this.testSkuller, this.platforms);
-    this.physics.add.collider(this.testSkuller, this.mwalls);
 
 
     this.fog = this.add.tileSprite(0,0, this.map.widthInPixels+64, this.map.heightInPixels+64, "fog").setOrigin(0,0).setAlpha(0.2);
@@ -292,6 +297,7 @@ class Map1_1 extends Phaser.Scene {
     //mmmmm
     if(this.firstCrystalDialog.isEnabled){this.firstCrystalDialog.playerQuery();}
     if(this.doorDialog.isEnabled){this.doorDialog.playerQuery();}
+    if(this.controlsDialog.isEnabled){this.controlsDialog.playerQuery();}
     if(this.door.onGoing){this.door.doorAnimCheck();}
 
     // Connect buttons to fpfs

@@ -11,6 +11,8 @@ class Pillar extends Phaser.Physics.Arcade.Sprite{
     this.body.allowGravity = false;
     this.isVertical = false;
     this.scale = 1.1;
+    this.moveDistance = 256;
+    this.moveSpeed = 1;
     this.Enabled = false;
     this.dir = '';
     this.isRetracted = false;
@@ -39,14 +41,14 @@ class Pillar extends Phaser.Physics.Arcade.Sprite{
     if(!this.isRetracted){
       if(this.dir == 'right'){
 
-        if(this.x < this.startX + 256 && !this.isVertical){this.setPosition(this.x + 1,this.y);}
-        else if(this.y < this.startY + 256 && this.isVertical){this.setPosition(this.x,this.y + 1);}
+        if(this.x < this.startX + this.moveDistance && !this.isVertical){this.setPosition(this.x + this.moveSpeed,this.y);}
+        else if(this.y < this.startY + this.moveDistance && this.isVertical){this.setPosition(this.x,this.y + this.moveSpeed);}
         else{this.isRetracted = true;this.endbSound.play({volume:.5});}
 
       }else if (this.dir == 'left') {
 
-        if(this.x > this.startX - 256 && !this.isVertical){this.setPosition(this.x - 1,this.y);}
-        else if(this.y > this.startY - 256 && this.isVertical){this.setPosition(this.x,this.y - 1);}
+        if(this.x > this.startX - this.moveDistance && !this.isVertical){this.setPosition(this.x - this.moveSpeed,this.y);}
+        else if(this.y > this.startY - this.moveDistance && this.isVertical){this.setPosition(this.x,this.y - this.moveSpeed);}
         else{this.isRetracted = true;this.endbSound.play({volume:.5});}
 
       }else{

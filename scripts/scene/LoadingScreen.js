@@ -27,7 +27,7 @@ class LoadingScreen extends Phaser.Scene {
     });
     this.loadb.anims.play('pingpong',true);
 
-    this.time.delayedCall(6000, function(){this.launchScene(data);}, null, this);
+    this.time.delayedCall(4000, function(){this.launchScene(data);}, null, this);
 
   }
 

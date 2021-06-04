@@ -13,6 +13,7 @@ class TitleScreen extends Phaser.Scene {
 
   create(){
     this.isLoading = false;
+    this.cameras.main.fadeIn(1000, 0, 0, 0);
 
     this.anims.create({
       key: 'spin',
@@ -67,14 +68,13 @@ class TitleScreen extends Phaser.Scene {
         this.isLoading = true;
         this.cameras.main.fadeOut(1000, 0, 0, 0)
         this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, (cam, effect) => {
-          this.scene.start( "map1_1");
+          this.scene.start("loadscreen","map1_1");
         })
       }}, this);
 
       // :) (9)
       this.input.keyboard.on('keydown-A', function () {
         this.a.play({volume:.5});
-        this.scale.startFullscreen();
         this.add.sprite(Math.random()*game.config.width, Math.random()*game.config.height, 'cp').play('spin', true);
       }, this);
 

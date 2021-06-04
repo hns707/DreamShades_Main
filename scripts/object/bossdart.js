@@ -1,0 +1,28 @@
+class Bossdart extends Phaser.Physics.Arcade.Sprite{
+
+    constructor(scene, x, y) {
+        super(scene, x, y, 'bossdart');
+
+		scene.add.existing(this);
+    scene.physics.add.existing(this);
+		scene.physics.add.overlap(scene.player, this, function(){scene.player.getHit(this.x);});
+    this.body.allowGravity = false;
+    this.scale = 2;
+
+    }
+
+    setFlip(isFlip){
+      this.flipX = isFlip;
+    }
+
+    projOut(){
+      this.destroy();
+    }
+
+
+    // WIP WIP WIP WIP WIP WIP WIP WIP
+      // WIP WIP WIP WIP WIP WIP WIP WIP
+        // WIP WIP WIP WIP WIP WIP WIP WIP
+          // WIP WIP WIP WIP WIP WIP WIP WIP
+
+}

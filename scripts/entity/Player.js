@@ -105,8 +105,7 @@ class Player extends Phaser.Physics.Arcade.Sprite{
     });
 
     this.cursors = scene.input.keyboard.createCursorKeys();
-    this.runKey = scene.input.keyboard.addKey('SHIFT'); // Run
-    this.spKey = scene.input.keyboard.addKey('H'); // Special
+    this.spKey = scene.input.keyboard.addKey('SHIFT'); // Special
     this.interactKey = scene.input.keyboard.addKey('SPACE'); // Special
 
     this.slashSound = scene.sound.add('sw');
@@ -226,7 +225,7 @@ class Player extends Phaser.Physics.Arcade.Sprite{
 
         }
 
-        //if(this.runKey.isDown){this.setVelocityX(-300);}
+
       }
 
       else if (this.cursors.right.isDown)
@@ -262,7 +261,7 @@ class Player extends Phaser.Physics.Arcade.Sprite{
 
         }
 
-        //if(this.runKey.isDown){this.setVelocityX(300);}
+
       }
       else if(this.isAttackingStill){
         this.anims.play('attack',true);
