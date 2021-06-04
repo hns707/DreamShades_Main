@@ -9,7 +9,7 @@ class Trigger_Platform extends Phaser.Physics.Arcade.Sprite{
     this.world = scene;
     this.body.immovable = true;
     this.body.allowGravity = false;
-    this.setAlpha(0.1);
+    this.setAlpha(0.25);
 
 
 
@@ -25,7 +25,7 @@ class Trigger_Platform extends Phaser.Physics.Arcade.Sprite{
       delay:Math.random()*1000,
       alpha:{
         startDelay:Math.random()*7500,
-        from:0.1,
+        from:0.25,
         to:1,
       }
     });

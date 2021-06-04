@@ -33,10 +33,8 @@ class Map1_1 extends Phaser.Scene {
 
     // objects
     this.load.image('bullet', 'assets/bulletb.png');
-    this.load.image('gonext', 'assets/next.png');
-    this.load.image('help', 'assets/helpc.png');
     this.load.image('button', 'assets/map1/button.png');
-    this.load.image('trigpf', 'assets/map1/triggered_platform.png');
+    this.load.image('trigpf', 'assets/map1/triggered_platform2.png');
     this.load.image('pillar', 'assets/map1/pillar.png');
 
     //HUD
@@ -96,6 +94,9 @@ class Map1_1 extends Phaser.Scene {
 
     this.btn4 = new Button(this,4543,1905, 'button');
     this.pillar1 = new Pillar(this, 4555,1630, 'pillar');
+    this.pillar2 = new Pillar(this, 4775,1760, 'pillar'); // 4675
+    this.pillar2.scaleX = 1.5;
+    this.pillar2.moveDistance = 100;
 
     //End door
     this.door = new Bossdoor(this, 4600, 2240, 'bossdoor');
@@ -135,6 +136,7 @@ class Map1_1 extends Phaser.Scene {
     this.physics.add.collider(this.player, this.btn3);
     this.physics.add.collider(this.player, this.btn4);
     this.physics.add.collider(this.player, this.pillar1);
+    this.physics.add.collider(this.player, this.pillar2);
     this.player.setCollideWorldBounds(true);
 
 
@@ -308,11 +310,11 @@ class Map1_1 extends Phaser.Scene {
     this.btn.press(); if(this.btn.doEffect){this.btn.action(0,this.tp1,null);}
     this.btn2.press(); if(this.btn2.doEffect){this.btn2.action(0,this.tp2,null);}
     this.btn3.press(); if(this.btn3.doEffect){this.btn3.action(0,this.tp3,null);}
-    this.btn4.press(); if(this.btn4.doEffect){this.btn4.action(1,this.pillar1,'right');}
+    this.btn4.press(); if(this.btn4.doEffect){this.btn4.action(1,this.pillar1,'right'); this.pillar2.enable('left');}
 
     //Za pillar
-    let p = this.pillar1;
-    if(p.Enabled){p.retract();}
+    let p = this.pillar1; let p2 = this.pillar2;
+    if(p.Enabled){p.retract(); p2.retract();}
 
     // Parralax
     this.fog.tilePositionX += .2;

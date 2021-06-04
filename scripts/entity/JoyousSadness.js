@@ -18,7 +18,7 @@ class Boss_JoyousSadness extends Phaser.Physics.Arcade.Sprite{
 
     this.isGettingHit = false;
     this.hitTimer = 0;
-    this.currentHP = 1;// 11
+    this.currentHP = 11;// 11
 
 
     // BOSS
@@ -142,16 +142,16 @@ class Boss_JoyousSadness extends Phaser.Physics.Arcade.Sprite{
     if(this.isAlive){
       let h = this.currentHP;
       switch (h) {
-        case 10: this.isPhase2 = true; console.log('PHASE 2'); break;
-        case 9: this.isPhase3 = true; console.log('PHASE 3'); break;
-        case 8: this.isPhase4 = true; console.log('PHASE 4'); break;
-        case 7: this.isPhase5 = true; console.log('PHASE 5'); break;
-        case 6: this.isPhase6 = true; console.log('PHASE 6'); break;
-        case 5: this.isPhase7 = true; console.log('PHASE 7'); break;
-        case 4: this.isPhase8 = true; console.log('PHASE 8'); break;
-        case 3: this.isPhase9 = true; console.log('PHASE 9'); break;
-        case 2: this.isPhase10 = true; console.log('PHASE 10'); break;
-        case 1: this.isPhase11 = true; console.log('PHASE 11'); break;
+        case 10: this.isPhase2 = true; break;
+        case 9: this.isPhase3 = true; break;
+        case 8: this.isPhase4 = true; break;
+        case 7: this.isPhase5 = true; break;
+        case 6: this.isPhase6 = true; break;
+        case 5: this.isPhase7 = true; break;
+        case 4: this.isPhase8 = true; break;
+        case 3: this.isPhase9 = true; break;
+        case 2: this.isPhase10 = true; break;
+        case 1: this.isPhase11 = true; break;
         default: console.log('BAD PHASE');
 
       }

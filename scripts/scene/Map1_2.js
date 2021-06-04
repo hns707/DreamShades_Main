@@ -62,12 +62,14 @@ class Map1_2 extends Phaser.Scene {
     this.load.tilemapTiledJSON('bossmap1', 'assets/map1/boss1map.json');
   }
 
-  create(){
+  create(data){
 
     this.onceZoomOut = false;
     this.battleStarted = false;
 
     this.lockCine = false;
+
+    this.gState = data;
 
 
     this.skipKey = this.input.keyboard.addKey('SPACE'); // Skipping dials
@@ -122,20 +124,29 @@ class Map1_2 extends Phaser.Scene {
     this.player.setCollideWorldBounds(true);
 
     //NPC
+
+    if(this.gState === 'isDead'){ // Skip dialogs if already died
+        this.altBossDialog = new Npc(this,2550,964,'mark').setAlpha(0);
+        this.altBossDialog2 = new Npc(this,2550,964,'mark').setAlpha(0);
+        this.altBossDialog2.isEnabled = false;
+        this.altBossDialog.setText('bossjsdb',"[Joyous Sadness] :\nOhohohohohoh.",true,2000,false,true,this.altBossDialog2);
+        this.altBossDialog2.setText('bossjsdb',"[Joyous Sadness] :\nStill want to fight?",true,2000,false,false);
+
+    }else{
+
     this.bossDialogs = [];
+      for (let i = 0 ; i < 6 ; i++){
+        this.bossDialogs[i] = new Npc(this,2550,964,'mark').setAlpha(0);
+        this.bossDialogs[i].isEnabled = false;
+      };
 
-    for (let i = 0 ; i < 6 ; i++){
-      this.bossDialogs[i] = new Npc(this,2550,964,'mark').setAlpha(0);
-      this.bossDialogs[i].isEnabled = false;
-    };
-
-    this.bossDialogs[0].setText('bossjsdb',"[???] :\nOhohohohohoh.",true,3000,false,true,this.bossDialogs[1]);
-    this.bossDialogs[1].setText('bossjsdb',"[???] :\nYou aren't from this place, maybe from the other\nside of the light wall. Ohohohoh.",true,6000,false,true,this.bossDialogs[2]);
-    this.bossDialogs[2].setText('bossjsdb',"[Joyous Sadness] :\nI'm the keeper of the Shard of Happiness, I'm\nJoyous Sadness, what bring you here?",true,6000,false,true,this.bossDialogs[3]);
-    this.bossDialogs[3].setText('shelldb',"[Stell] :\nI'm here to take shard, to reclaim what Exterro\nstole from the Dream Realm.",true,6000,false,true,this.bossDialogs[4]);
-    this.bossDialogs[4].setText('bossjsdb',"[Joyous Sadness] :\nOhohohoh, you think our Lord Exterro would give\nme the shard he stole just to hand it to you?",true,6000,false,true,this.bossDialogs[5]);
-    this.bossDialogs[5].setText('shelldb',"[Stell] :\nThen, i'll take it by force.",true,4000,false,false);
-
+      this.bossDialogs[0].setText('bossjsdb',"[???] :\nOhohohohohoh.",true,3000,false,true,this.bossDialogs[1]);
+      this.bossDialogs[1].setText('bossjsdb',"[???] :\nYou aren't from this place, maybe from the other\nside of the light wall. Ohohohoh.",true,6000,false,true,this.bossDialogs[2]);
+      this.bossDialogs[2].setText('bossjsdb',"[Joyous Sadness] :\nI'm the keeper of the Shard of Happiness, I'm\nJoyous Sadness, what bring you here?",true,6000,false,true,this.bossDialogs[3]);
+      this.bossDialogs[3].setText('shelldb',"[Stell] :\nI'm here to take shard, to reclaim what Exterro\nstole from the Dream Realm.",true,6000,false,true,this.bossDialogs[4]);
+      this.bossDialogs[4].setText('bossjsdb',"[Joyous Sadness] :\nOhohohoh, you think our Lord Exterro would give\nme the shard he stole just to hand it to you?",true,6000,false,true,this.bossDialogs[5]);
+      this.bossDialogs[5].setText('shelldb',"[Stell] :\nThen, i'll take it by force.",true,4000,false,false);
+    }
     //this.testLaser = new Bosslaser(this,1900,830,'bosslaser');
     //this.testLaser.setHorizontal();
     //this.testLaser.scale = 15;
@@ -215,16 +226,23 @@ class Map1_2 extends Phaser.Scene {
       this.setPlayerLock(true);
     }
 
-    if(this.bossDialogs[0].isEnabled){this.bossDialogs[0].playerQuery();}
-    if(this.bossDialogs[1].isEnabled){this.bossDialogs[1].playerQuery();}
-    if(this.bossDialogs[2].isEnabled){this.bossDialogs[2].playerQuery();}
-    if(this.bossDialogs[3].isEnabled){this.bossDialogs[3].playerQuery();}
-    if(this.bossDialogs[4].isEnabled){this.bossDialogs[4].playerQuery(); this.lockCine = true;}
-    if(this.bossDialogs[5].isEnabled){this.bossDialogs[5].playerQuery(); this.time.delayedCall(4000, function(){this.showBossHp();this.battleStarted = true;}, null, this);}
+    if(this.gState !== 'isDead'){
+      if(this.bossDialogs[0].isEnabled){this.bossDialogs[0].playerQuery();}
+      if(this.bossDialogs[1].isEnabled){this.bossDialogs[1].playerQuery();}
+      if(this.bossDialogs[2].isEnabled){this.bossDialogs[2].playerQuery();}
+      if(this.bossDialogs[3].isEnabled){this.bossDialogs[3].playerQuery();}
+      if(this.bossDialogs[4].isEnabled){this.bossDialogs[4].playerQuery(); this.lockCine = true;}
+      if(this.bossDialogs[5].isEnabled){this.bossDialogs[5].playerQuery(); this.time.delayedCall(4000, function(){this.showBossHp();this.battleStarted = true;}, null, this);}
+    } else {
+      if(this.altBossDialog){if(this.altBossDialog.isEnabled){this.altBossDialog.playerQuery();}}
+      if(this.altBossDialog2){if(this.altBossDialog2.isEnabled){this.altBossDialog2.playerQuery(); this.time.delayedCall(1000, function(){this.showBossHp();this.battleStarted = true;}, null, this);}}
+    }
     if(this.bossDialogs[6]){if(this.bossDialogs[6].isEnabled){this.bossDialogs[6].playerQuery();}}
     if(this.bossDialogs[7]){if(this.bossDialogs[7].isEnabled){this.bossDialogs[7].playerQuery();}}
     if(this.bossDialogs[8]){if(this.bossDialogs[8].isEnabled){this.bossDialogs[8].playerQuery();}}
     if(this.bossDialogs[9]){if(this.bossDialogs[9].isEnabled){this.bossDialogs[9].playerQuery();}}
+
+
 
     this.wantToSkipDialogs(this.skipKey.isDown);
 
@@ -232,14 +250,6 @@ class Map1_2 extends Phaser.Scene {
 
     this.showAltar(this.boss.isOver);
 
-
-
-
-
-
-    if(this.onceZoomOut){
-      //this.vignette.setPosition(this.cameras.main.width/2, this.cameras.main.height/2 ) ;
-    }
 
     // Parralax
     this.fog.tilePositionX += .2;
@@ -256,7 +266,7 @@ class Map1_2 extends Phaser.Scene {
 
   }
 
-  restart(){this.bgm2.stop();this.scene.start("map1_2");}
+  restart(){this.bgm2.stop();this.scene.start("map1_2",'isDead');}
 
   outOfCinematic(isDoor,isMultiDials,nextnpc){ // After dial only
     this.dialbox.call();
@@ -299,6 +309,7 @@ class Map1_2 extends Phaser.Scene {
           this.onceFade = true;
           this.cameras.main.fadeOut(1000, 0, 0, 0)
           this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, (cam, effect) => {
+            this.bgm2.stop();
             this.scene.start("endscreen");
           });
         }
@@ -337,7 +348,7 @@ class Map1_2 extends Phaser.Scene {
   }
 
   zoomOutInArena(){
-    if(this.player.x > 1700 && !this.onceZoomOut){
+    if(this.player.x > 2000 && !this.onceZoomOut){
       let cam = this.cameras.main;
       this.tweens.add({
         targets: cam,

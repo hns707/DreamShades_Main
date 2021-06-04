@@ -40,6 +40,8 @@ class Crystal extends Phaser.Physics.Arcade.Sprite{
     // Was the last crystal?
     if(this.world.player.crystalCount == 5){
       this.world.player.controlsLocked = true;
+      this.world.pillar2.Enabled = false;
+      this.world.pillar2.setPosition(4775,1760);
       this.world.dialbox = new Dialogbox(this.world, 100, 450, 'opendialog');
       this.world.dialbox.textToDisplay = "[Stell] :\nThis is the last one, let's head to the door now.";
       this.world.dialbox.whoTalk = 'shelldb';

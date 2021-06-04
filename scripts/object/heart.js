@@ -39,7 +39,6 @@ class Heart extends Phaser.Physics.Arcade.Sprite{
     // Proceed HUD Update
     this.world.player.currentHP++;
     let i = this.world.player.currentHP -1;
-    console.log(i);
     this.world.heart[i] = this.world.add.sprite(16+i*50, 16, 'heart').setOrigin(0,0).setScrollFactor(0);
     this.world.heart[i].scale = 2;
     this.world.heartlight[i] = this.world.add.pointlight(this.world.heart[i].x+16, this.world.heart[i].y+16, 0, 50, 0.5);

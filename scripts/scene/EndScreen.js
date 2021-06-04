@@ -13,7 +13,9 @@ class EndScreen extends Phaser.Scene {
 
   create(data){
     this.loadbg = this.add.sprite(game.config.width/2, game.config.height/2, 'load_bg');
-    let loadtext = this.add.text(game.config.width/2 - 350,game.config.height/2 -25,"Thanks for playing !",{font: "64px visitor", fill:"#FFF"});
+    this.add.text(game.config.width/2 - 350,game.config.height/2 +25,"Thanks for playing !",{font: "64px visitor", fill:"#FFF"});
+    this.add.text(game.config.width/2 - 300,game.config.height/2 -25,"To be continued...",{font: "64px visitor", fill:"#FFF"});
+
     this.cameras.main.fadeIn(1000, 0, 0, 0);
 
 
