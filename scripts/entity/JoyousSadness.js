@@ -18,7 +18,7 @@ class Boss_JoyousSadness extends Phaser.Physics.Arcade.Sprite{
 
     this.isGettingHit = false;
     this.hitTimer = 0;
-    this.currentHP = 11;// 11
+    this.currentHP = 1;// 11
 
 
     // BOSS
@@ -247,7 +247,7 @@ class Boss_JoyousSadness extends Phaser.Physics.Arcade.Sprite{
               }, null, w);
             }
             for (var i = 0; i < 18; i++) {
-              if(Math.random()*100 < 30){
+              if(Math.random()*100 < 15){
                 let bullet = new Gproj(this.world,2600-i*50, 200,'bullet').setVelocityY(400);
                 bullet.angle = 270;
                 bullet.scale = 3;
@@ -279,7 +279,7 @@ class Boss_JoyousSadness extends Phaser.Physics.Arcade.Sprite{
                 }, null, w);
               }
               for (var i = 0; i < 19; i++) {
-                if(Math.random()*100 < 25){
+                if(Math.random()*100 < 15){
                   let bullet = new Gproj(this.world,2320+i*50, 200,'bullet').setVelocityY(400);
                   bullet.angle = 270;
                   bullet.scale = 3;
@@ -304,7 +304,7 @@ class Boss_JoyousSadness extends Phaser.Physics.Arcade.Sprite{
                 w.bossPillar[1].moveDistance = 1000;
                 w.bossPillar[1].isRetracted = false;
                 w.bossPillar[1].setPosition(2706,1900);
-                w.time.delayedCall(20000,
+                w.time.delayedCall(10000,
                   function(){
                     b.p5.remove(false);
                     b.isPhase5 = false;
@@ -317,13 +317,13 @@ class Boss_JoyousSadness extends Phaser.Physics.Arcade.Sprite{
                 }
 
                 for (var i = 0; i < 18; i++) {
-                  if(Math.random()*100 < 20){
-                    let bullet = new Gproj(this.world,2600-i*50, 200,'bullet').setVelocityY(400);
+
+                    let bullet = new Gproj(this.world,2600-i*50, 200,'bullet').setVelocityY(200);
                     bullet.angle = 270;
                     bullet.scale = 3;
                     this.world.physics.add.collider(bullet, this.world.platforms, function(){bullet.projOut();}, null, this.world);
 
-                  }
+
                   if(Math.random()*100 < 10){
 
                     let dartSpawnPoint = [Math.random()*400 - 200 + 2320, Math.random()*400 - 200 + 300];
@@ -355,18 +355,18 @@ class Boss_JoyousSadness extends Phaser.Physics.Arcade.Sprite{
                     for (var i = 0; i < 3; i++) {
                       lasers[i] = new Bosslaser(w,2350+i*300, 830,'bosslaser');
                       let l = lasers[i];
-                      setTimeout(function(){l.destroy()},20000);
+                      setTimeout(function(){l.destroy()},10000);
                     }
                     w.time.delayedCall(1250,function(){
                       let lasersB = [];
                       for (var i = 0; i < 3; i++) {
                         lasersB[i] = new Bosslaser(w,2500+i*300, 830,'bosslaser');
                         let lb = lasersB[i];
-                        setTimeout(function(){lb.destroy()},18750);
+                        setTimeout(function(){lb.destroy()},8750);
                       }
                     }, null, w);
                   }, null, w);
-                  w.time.delayedCall(20000,
+                  w.time.delayedCall(10000,
                     function(){
                       b.p6.remove(false);
                       b.isPhase6 = false;
@@ -392,7 +392,7 @@ class Boss_JoyousSadness extends Phaser.Physics.Arcade.Sprite{
                     w.bossPillar[1].moveDistance = 1000;
                     w.bossPillar[1].isRetracted = false;
                     w.bossPillar[1].setPosition(2706,1900);
-                    w.time.delayedCall(20000,
+                    w.time.delayedCall(10000,
                       function(){
                         b.p7.remove(false);
                         b.isPhase7 = false;
@@ -406,21 +406,21 @@ class Boss_JoyousSadness extends Phaser.Physics.Arcade.Sprite{
                       for (var i = 0; i < 3; i++) {
                         lasers[i] = new Bosslaser(this.world,2550-i*300, 830,'bosslaser');
                         let l = lasers[i];
-                        setTimeout(function(){l.destroy()},20000);
+                        setTimeout(function(){l.destroy()},10000);
                       }
                       w.time.delayedCall(1250,function(){
                         let lasersB = [];
                         for (var i = 0; i < 3; i++) {
                           lasersB[i] = new Bosslaser(w,2400-i*300, 830,'bosslaser');
                           let lb = lasersB[i];
-                          setTimeout(function(){lb.destroy()},18750);
+                          setTimeout(function(){lb.destroy()},8750);
                         }
                       }, null, w);
 
                     }
                     for (var i = 0; i < 18; i++) {
 
-                      let bullet = new Gproj(this.world,2600-i*50, 200,'bullet').setVelocityY(400);
+                      let bullet = new Gproj(this.world,2600-i*50, 200,'bullet').setVelocityY(200);
                       bullet.angle = 270;
                       bullet.scale = 3;
                       this.world.physics.add.collider(bullet, this.world.platforms, function(){bullet.projOut();}, null, this.world);
@@ -440,7 +440,7 @@ class Boss_JoyousSadness extends Phaser.Physics.Arcade.Sprite{
                       w.bossPillar[0].moveDistance = 1000;
                       w.bossPillar[0].isRetracted = false;
                       w.bossPillar[0].setPosition(2222,1900);
-                      w.time.delayedCall(20000,
+                      w.time.delayedCall(10000,
                         function(){
                           b.p8.remove(false);
                           b.isPhase8 = false;
@@ -453,13 +453,13 @@ class Boss_JoyousSadness extends Phaser.Physics.Arcade.Sprite{
                         let laser = new Bosslaser(w,2300, 1250,'bosslaser');
                         laser.setHorizontal();
                         laser.scale = 14;
-                        setTimeout(function(){laser.destroy()},20000);
+                        setTimeout(function(){laser.destroy()},10000);
 
                         w.time.delayedCall(1250,function(){
                           let laserB = new Bosslaser(w,2300, 975,'bosslaser');
                           laserB.setHorizontal();
                           laserB.scale = 14;
-                          setTimeout(function(){laserB.destroy()},18750);
+                          setTimeout(function(){laserB.destroy()},8750);
 
                         }, null, w);
                       }
@@ -477,7 +477,7 @@ class Boss_JoyousSadness extends Phaser.Physics.Arcade.Sprite{
                         w.bossPillar[1].moveDistance = 1000;
                         w.bossPillar[1].isRetracted = false;
                         w.bossPillar[1].setPosition(2706,1900);
-                        w.time.delayedCall(20000,
+                        w.time.delayedCall(10000,
                           function(){
                             b.p9.remove(false);
                             b.isPhase9 = false;
@@ -491,25 +491,25 @@ class Boss_JoyousSadness extends Phaser.Physics.Arcade.Sprite{
                           hlaser.setHorizontal();
                           hlaser.scale = 14;
                           hlaser.flipY = true;
-                          setTimeout(function(){hlaser.destroy()},20000);
+                          setTimeout(function(){hlaser.destroy()},10000);
 
                           let lasers = [];
                           for (var i = 0; i < 3; i++) {
                             lasers[i] = new Bosslaser(this.world,2550-i*300, 830,'bosslaser');
                             let l = lasers[i];
-                            setTimeout(function(){l.destroy()},20000);
+                            setTimeout(function(){l.destroy()},10000);
                           }
                           w.time.delayedCall(1250,function(){
                             let hlaserB = new Bosslaser(w,1690, 975,'bosslaser');
                             hlaserB.setHorizontal();
                             hlaserB.scale = 14;
                             hlaserB.flipY = true;
-                            setTimeout(function(){hlaserB.destroy()},18750);
+                            setTimeout(function(){hlaserB.destroy()},8750);
                             let lasersB = [];
                             for (var i = 0; i < 3; i++) {
                               lasersB[i] = new Bosslaser(w,2400-i*300, 830,'bosslaser');
                               let lb = lasersB[i];
-                              setTimeout(function(){lb.destroy()},18750);
+                              setTimeout(function(){lb.destroy()},8750);
                             }
                           }, null, w);
 
@@ -536,29 +536,29 @@ class Boss_JoyousSadness extends Phaser.Physics.Arcade.Sprite{
                             let laser = new Bosslaser(w,2300, 1250,'bosslaser');
                             laser.setHorizontal();
                             laser.scale = 14;
-                            setTimeout(function(){laser.destroy()},20000);
+                            setTimeout(function(){laser.destroy()},10000);
 
 
                             let lasers = [];
                             for (var i = 0; i < 3; i++) {
                               lasers[i] = new Bosslaser(w,2350+i*300, 830,'bosslaser');
                               let l = lasers[i];
-                              setTimeout(function(){l.destroy()},20000);
+                              setTimeout(function(){l.destroy()},10000);
                             }
                             w.time.delayedCall(1250,function(){
                               let laserB = new Bosslaser(w,2300, 975,'bosslaser');
                               laserB.setHorizontal();
                               laserB.scale = 14;
-                              setTimeout(function(){laserB.destroy()},18750);
+                              setTimeout(function(){laserB.destroy()},8750);
                               let lasersB = [];
                               for (var i = 0; i < 3; i++) {
                                 lasersB[i] = new Bosslaser(w,2500+i*300, 830,'bosslaser');
                                 let lb = lasersB[i];
-                                setTimeout(function(){lb.destroy()},18750);
+                                setTimeout(function(){lb.destroy()},8750);
                               }
                             }, null, w);
                           }, null, w);
-                          w.time.delayedCall(20000,
+                          w.time.delayedCall(10000,
                             function(){
                               b.p10.remove(false);
                               b.isPhase10 = false;
@@ -602,29 +602,29 @@ class Boss_JoyousSadness extends Phaser.Physics.Arcade.Sprite{
                               hlaser.setHorizontal();
                               hlaser.scale = 14;
                               hlaser.flipY = true;
-                              setTimeout(function(){hlaser.destroy()},20000);
+                              setTimeout(function(){hlaser.destroy()},10000);
 
                               let lasers = [];
                               for (var i = 0; i < 3; i++) {
                                 lasers[i] = new Bosslaser(w,2550-i*300, 830,'bosslaser');
                                 let l = lasers[i];
-                                setTimeout(function(){l.destroy()},20000);
+                                setTimeout(function(){l.destroy()},10000);
                               }
                               w.time.delayedCall(1250,function(){
                                 let hlaserB = new Bosslaser(w,1690, 975,'bosslaser');
                                 hlaserB.setHorizontal();
                                 hlaserB.scale = 14;
                                 hlaserB.flipY = true;
-                                setTimeout(function(){hlaserB.destroy()},18750);
+                                setTimeout(function(){hlaserB.destroy()},8750);
                                 let lasersB = [];
                                 for (var i = 0; i < 3; i++) {
                                   lasersB[i] = new Bosslaser(w,2400-i*300, 830,'bosslaser');
                                   let lb = lasersB[i];
-                                  setTimeout(function(){lb.destroy()},18750);
+                                  setTimeout(function(){lb.destroy()},8750);
                                 }
                               }, null, w);
                             }, null, w);
-                            w.time.delayedCall(20000,
+                            w.time.delayedCall(10000,
                               function(){
                                 b.p11.remove(false);
                                 b.isPhase11 = false;

@@ -46,6 +46,7 @@ class Gunner extends Phaser.Physics.Arcade.Sprite{
     this.killEffect();
     this.disableBody(true, true);
     this.isAlive = false;
+    new Heart(this.world, this.x, this.y, 'heart');
   }
 
   killEffect(){

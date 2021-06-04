@@ -5,7 +5,7 @@ class TitleScreen extends Phaser.Scene {
 
   preload ()
   {
-    this.load.image('titlescreen', 'assets/DS_Title.png');
+    this.load.image('titlescreen', 'assets/DS_Title2.png');
     this.load.image('btn', 'assets/buttontitle.png');
     this.load.spritesheet('cp', 'assets/cp.png', { frameWidth: 206, frameHeight: 184 } );
     this.load.audio('a', [ 'assets/audio/a.ogg', 'assets/audio/a.mp3' ]);

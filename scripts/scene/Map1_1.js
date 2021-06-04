@@ -68,10 +68,11 @@ class Map1_1 extends Phaser.Scene {
     this.load.tilemapTiledJSON('map1', 'assets/map1/map1_n.json');
   }
 
-  create(){
+  create(data){
 
 
     this.spaceOnce = false;
+    this.gState = data;
 
     // BGM
     this.bgm = this.sound.add('bgm');
@@ -117,9 +118,10 @@ class Map1_1 extends Phaser.Scene {
     this.controlsDialog = new Npc(this,150,2884,'mark').setAlpha(0);
     this.controlsDialog.setText('nodb',"[Controls] :\nUse the ARROWS keys to move and jump.\nUse SHIFT to attack.\nTo reach higher and farer platforms, keep the\narrow key down to gather speed.",false);
 
-
-    this.firstCrystalDialog = new Npc(this,700,2884,'mark').setAlpha(0);
-    this.firstCrystalDialog.setText('shelldb',"[Stell] :\nThis crystal have a strange energy around it.\nI feel a connection between it and this place, it\nmight be a good idea to take it.",true,6000,false,false);
+    if(this.gState !== 'isDead'){
+      this.firstCrystalDialog = new Npc(this,700,2884,'mark').setAlpha(0);
+      this.firstCrystalDialog.setText('shelldb',"[Stell] :\nThis crystal have a strange energy around it.\nI feel a connection between it and this place, it\nmight be a good idea to take it.",true,6000,false,false);
+   }
 
     this.doorDialog = new Npc(this,4595,2370,'mark').setAlpha(0);
     this.doorDialog.setText('shelldb',"[Stell] :\nThis door seems sealed.\nMaybe if I find enough of these crystals shards\nto fill all the slots..",false);
@@ -143,6 +145,8 @@ class Map1_1 extends Phaser.Scene {
     this.crystalBox[2] = new Crystal(this, 225, 260, 'yescrystal');
     this.crystalBox[3] = new Crystal(this, 2600, 708, 'yescrystal');
     this.crystalBox[4] = new Crystal(this, 4537, 772, 'yescrystal');
+
+    //new Heart(this,900,2884, 'heart'); test
 
     // Door testing (Start at : 4124 , 2372)
     //this.crystalBox[5] = new Crystal(this, 4337, 2372, 'yescrystal');
@@ -295,7 +299,7 @@ class Map1_1 extends Phaser.Scene {
     this.crystalBox.forEach(crstl => {crstl.upd(delta)});
 
     //mmmmm
-    if(this.firstCrystalDialog.isEnabled){this.firstCrystalDialog.playerQuery();}
+    if(this.gState !== 'isDead'){if(this.firstCrystalDialog.isEnabled){this.firstCrystalDialog.playerQuery();}}
     if(this.doorDialog.isEnabled){this.doorDialog.playerQuery();}
     if(this.controlsDialog.isEnabled){this.controlsDialog.playerQuery();}
     if(this.door.onGoing){this.door.doorAnimCheck();}
@@ -317,7 +321,7 @@ class Map1_1 extends Phaser.Scene {
     if(this.player.isBelow(this.map.heightInPixels+50)){this.restart();}
 
   }
-  restart(){this.bgm.stop();this.scene.start("map1_1");}
+  restart(){this.bgm.stop();this.scene.start("map1_1",'isDead');}
 
   outOfCinematic(isDoor,isMultiDials,rootNpc){ // After pickup only
     this.dialbox.call();

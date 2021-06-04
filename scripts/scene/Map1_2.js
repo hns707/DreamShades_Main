@@ -67,6 +67,8 @@ class Map1_2 extends Phaser.Scene {
     this.onceZoomOut = false;
     this.battleStarted = false;
 
+    this.lockCine = false;
+
 
     this.skipKey = this.input.keyboard.addKey('SPACE'); // Skipping dials
     this.onceFade = false;
@@ -209,11 +211,15 @@ class Map1_2 extends Phaser.Scene {
 
     this.zoomOutInArena();
 
+    if(this.lockCine){
+      this.setPlayerLock(true);
+    }
+
     if(this.bossDialogs[0].isEnabled){this.bossDialogs[0].playerQuery();}
     if(this.bossDialogs[1].isEnabled){this.bossDialogs[1].playerQuery();}
     if(this.bossDialogs[2].isEnabled){this.bossDialogs[2].playerQuery();}
     if(this.bossDialogs[3].isEnabled){this.bossDialogs[3].playerQuery();}
-    if(this.bossDialogs[4].isEnabled){this.bossDialogs[4].playerQuery();}
+    if(this.bossDialogs[4].isEnabled){this.bossDialogs[4].playerQuery(); this.lockCine = true;}
     if(this.bossDialogs[5].isEnabled){this.bossDialogs[5].playerQuery(); this.time.delayedCall(4000, function(){this.showBossHp();this.battleStarted = true;}, null, this);}
     if(this.bossDialogs[6]){if(this.bossDialogs[6].isEnabled){this.bossDialogs[6].playerQuery();}}
     if(this.bossDialogs[7]){if(this.bossDialogs[7].isEnabled){this.bossDialogs[7].playerQuery();}}
@@ -222,7 +228,7 @@ class Map1_2 extends Phaser.Scene {
 
     this.wantToSkipDialogs(this.skipKey.isDown);
 
-    this.endFadeOut(this.skipKey.isDown);
+    //this.endFadeOut(this.skipKey.isDown);
 
     this.showAltar(this.boss.isOver);
 
@@ -245,7 +251,7 @@ class Map1_2 extends Phaser.Scene {
       this.bossPillar[0].retract();
       this.bossPillar[1].enable('left');
       this.bossPillar[1].retract();
-      this.time.delayedCall(2000, function(){boss.isPhase1 = true;}, null, this);
+      this.time.delayedCall(2000, function(){boss.isPhase1 = true; this.lockCine = false; this.setPlayerLock(false);}, null, this);
     }
 
   }
@@ -255,7 +261,7 @@ class Map1_2 extends Phaser.Scene {
   outOfCinematic(isDoor,isMultiDials,nextnpc){ // After dial only
     this.dialbox.call();
     this.setPlayerLock(false);
-    if(isDoor){this.door.playAnimation();}
+    if(isDoor){this.endFadeOut(true);}
     if(isMultiDials){nextnpc.isEnabled = true;}
   }
 
@@ -280,7 +286,7 @@ class Map1_2 extends Phaser.Scene {
         if(!this.onceAltar){
           this.onceAltar = true;
           this.bossDialogs[9] = new Npc(this,al.x,al.y,'mark').setAlpha(0);
-          this.bossDialogs[9].setText('shelldb',"[Stell] :\nFinally..",true,3000,false,false);
+          this.bossDialogs[9].setText('shelldb',"[Stell] :\nFinally..",true,3000,true,false);
         }
       }
     }
@@ -293,7 +299,7 @@ class Map1_2 extends Phaser.Scene {
           this.onceFade = true;
           this.cameras.main.fadeOut(1000, 0, 0, 0)
           this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, (cam, effect) => {
-            this.scene.start("bootGame");
+            this.scene.start("endscreen");
           });
         }
       }
